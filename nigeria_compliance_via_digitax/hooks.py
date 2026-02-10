@@ -1,7 +1,7 @@
 app_name = "nigeria_compliance_via_digitax"
-app_title = "Nigeria Compliance Via Digitax"
+app_title = "Nigeria Compliance"
 app_publisher = "Navari Limited"
-app_description = "Federal Inland Revenue Service (FIRS) integration via Digitax by Navari Ltd for Nigeria."
+app_description = "An ERPNext application for seamless integration with Nigeria's Federal Inland Revenue Service (FIRS) through the Digitax Nigeria API. This app automates tax compliance, e-invoicing, and regulatory reporting for Nigerian businesses."
 app_email = "solutions@navari.co.ke"
 app_license = "mit"
 
@@ -11,15 +11,15 @@ app_license = "mit"
 # required_apps = []
 
 # Each item in the list will be shown as an app in the apps page
-# add_to_apps_screen = [
-# 	{
-# 		"name": "nigeria_compliance_via_digitax",
-# 		"logo": "/assets/nigeria_compliance_via_digitax/logo.png",
-# 		"title": "Nigeria Compliance Via Digitax",
-# 		"route": "/nigeria_compliance_via_digitax",
-# 		"has_permission": "nigeria_compliance_via_digitax.api.permission.has_app_permission"
-# 	}
-# ]
+add_to_apps_screen = [
+    {
+        "name": "nigeria_compliance_via_digitax",
+        "logo": "/assets/nigeria_compliance_via_digitax/assets/logo.png",
+        "title": "Nigeria Compliance Via Digitax",
+        "route": "/nigeria_compliance_via_digitax",
+        "has_permission": "nigeria_compliance_via_digitax.api.permission.has_app_permission",
+    }
+]
 
 # Includes in <head>
 # ------------------
@@ -86,7 +86,7 @@ app_license = "mit"
 # ------------
 
 # before_install = "nigeria_compliance_via_digitax.install.before_install"
-# after_install = "nigeria_compliance_via_digitax.install.after_install"
+after_install = "nigeria_compliance_via_digitax.install.after_install"
 
 # Uninstallation
 # ------------
@@ -249,4 +249,3 @@ app_license = "mit"
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
-

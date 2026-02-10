@@ -1,0 +1,74 @@
+[
+  {
+    "code": "REDUCED_GST"
+  },
+  {
+    "code": "ZERO_GST"
+  },
+  {
+    "code": "LOCAL_SALES_TAX"
+  },
+  {
+    "code": "TOBACCO_EXCISE_TAX"
+  },
+  {
+    "code": "SOCIAL_SECURITY_TAX"
+  },
+  {
+    "code": "MEDICARE_TAX"
+  },
+  {
+    "code": "CARBON_TAX"
+  },
+  {
+    "code": "LUXURY_TAX"
+  },
+  {
+    "code": "REDUCED_VAT"
+  },
+  {
+    "code": "STATE_SALES_TAX"
+  },
+  {
+    "code": "ALCOHOL_EXCISE_TAX"
+  },
+  {
+    "code": "CORPORATE_INCOME_TAX"
+  },
+  {
+    "code": "PERSONAL_INCOME_TAX"
+  },
+  {
+    "code": "PERSONAL_PROPERTY_TAX"
+  },
+  {
+    "code": "SERVICE_TAX"
+  },
+  {
+    "code": "STANDARD_GST"
+  },
+  {
+    "code": "STANDARD_VAT"
+  },
+  {
+    "code": "PLASTIC_TAX"
+  },
+  {
+    "code": "IMPORT_DUTY"
+  },
+  {
+    "code": "EXPORT_DUTY"
+  },
+  {
+    "code": "ZERO_VAT"
+  },
+  {
+    "code": "FUEL_EXCISE_TAX"
+  },
+  {
+    "code": "REAL_ESTATE_TAX"
+  },
+  {
+    "code": "TOURISM_TAX"
+  }
+]
