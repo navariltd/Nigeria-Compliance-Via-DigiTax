@@ -86,7 +86,7 @@ add_to_apps_screen = [
 # ------------
 
 # before_install = "nigeria_compliance_via_digitax.install.before_install"
-# after_install = "nigeria_compliance_via_digitax.install.after_install"
+after_install = "nigeria_compliance_via_digitax.install.after_install"
 
 # Uninstallation
 # ------------
