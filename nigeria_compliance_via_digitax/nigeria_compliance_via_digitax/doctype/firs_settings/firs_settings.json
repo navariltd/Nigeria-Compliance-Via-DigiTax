@@ -16,14 +16,18 @@
   {
    "fieldname": "company",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Company",
    "options": "Company",
+   "reqd": 1,
    "unique": 1
   },
   {
    "fieldname": "tax_identification_number",
    "fieldtype": "Data",
-   "label": "TIN (Tax Identification Number)"
+   "in_list_view": 1,
+   "label": "TIN (Tax Identification Number)",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_dgvz",
@@ -38,15 +42,17 @@
   {
    "fieldname": "environment",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Environment",
    "link_filters": "[[\"DigiTax Environment\",\"is_anabled\",\"=\",1]]",
-   "options": "DigiTax Environment"
+   "options": "DigiTax Environment",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-10 14:05:55.954015",
+ "modified": "2026-02-10 14:14:29.006883",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "FIRS Settings",

@@ -8,31 +8,49 @@
  "field_order": [
   "environment_name",
   "api_key",
-  "is_anabled"
+  "is_anabled",
+  "column_break_jwid",
+  "base_url"
  ],
  "fields": [
   {
    "fieldname": "environment_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Environment Name",
+   "reqd": 1,
    "unique": 1
   },
   {
    "fieldname": "api_key",
    "fieldtype": "Password",
-   "label": "API Key"
+   "in_list_view": 1,
+   "label": "API Key",
+   "reqd": 1
   },
   {
    "default": "0",
    "fieldname": "is_anabled",
    "fieldtype": "Check",
    "label": "Is Anabled"
+  },
+  {
+   "fieldname": "column_break_jwid",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "https://api.digitax.tech/ng/v1/items",
+   "fieldname": "base_url",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Base URL",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-10 13:15:51.702906",
+ "modified": "2026-02-10 14:37:56.861033",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "DigiTax Environment",
