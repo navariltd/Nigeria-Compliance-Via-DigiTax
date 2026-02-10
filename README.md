@@ -1,8 +1,8 @@
-### Nigeria Compliance Via Digitax
+# Nigeria Compliance Via Digitax
 
 Federal Inland Revenue Service (FIRS) integration via Digitax by Navari Ltd for Nigeria.
 
-### Installation
+## Installation
 
 You can install this app using the [bench](https://github.com/frappe/bench) CLI:
 
@@ -12,9 +12,9 @@ bench get-app $URL_OF_THIS_REPO --branch version-16
 bench install-app nigeria_compliance_via_digitax
 ```
 
-### Features
+## Features
 
-#### Automatic HS Code and Service Code Loading
+### Automatic HS Code and Service Code Loading
 
 When the app is installed, it automatically loads:
 
@@ -23,7 +23,7 @@ When the app is installed, it automatically loads:
 
 These codes are required for DigiTax integration to generate unique item IDs for tax compliance.
 
-#### Manual Code Management
+### Manual Code Management
 
 If you need to reload the codes manually, you can use the following methods:
 
@@ -40,7 +40,7 @@ frappe.call("nigeria_compliance_via_digitax.utils.load_codes_if_missing")
 frappe.call("nigeria_compliance_via_digitax.utils.reload_codes")
 ```
 
-### Contributing
+## Contributing
 
 This app uses `pre-commit` for code formatting and linting. Please [install pre-commit](https://pre-commit.com/#installation) and enable it for this repository:
 
@@ -56,13 +56,13 @@ Pre-commit is configured to use the following tools for checking and formatting 
 - prettier
 - pyupgrade
 
-### CI
+## CI
 
 This app can use GitHub Actions for CI. The following workflows are configured:
 
 - CI: Installs this app and runs unit tests on every push to `develop` branch.
 - Linters: Runs [Frappe Semgrep Rules](https://github.com/frappe/semgrep-rules) and [pip-audit](https://pypi.org/project/pip-audit/) on every pull request.
 
-### License
+## License
 
-mit
+MIT
