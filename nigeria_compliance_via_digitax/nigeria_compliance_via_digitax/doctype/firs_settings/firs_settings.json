@@ -9,7 +9,7 @@
   "company",
   "tax_identification_number",
   "column_break_dgvz",
-  "api_key",
+  "environment",
   "allow_firs_tracking_sales"
  ],
  "fields": [
@@ -30,21 +30,23 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "api_key",
-   "fieldtype": "Password",
-   "label": "DigiTax API Key"
-  },
-  {
    "default": "0",
    "fieldname": "allow_firs_tracking_sales",
    "fieldtype": "Check",
    "label": "Allow FIRS To Track Sales"
+  },
+  {
+   "fieldname": "environment",
+   "fieldtype": "Link",
+   "label": "Environment",
+   "link_filters": "[[\"DigiTax Environment\",\"is_anabled\",\"=\",1]]",
+   "options": "DigiTax Environment"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-10 11:38:27.528926",
+ "modified": "2026-02-10 14:05:55.954015",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "FIRS Settings",
