@@ -7,6 +7,7 @@ These can be called from the Frappe console or programmatically.
 """
 
 import frappe
+from frappe import _
 from nigeria_compliance_via_digitax.install import (
     load_hs_codes,
     load_service_codes,
@@ -25,10 +26,10 @@ def reload_codes():
             frappe.call("nigeria_compliance_via_digitax.utils.reload_codes")
     """
     if not frappe.has_permission("Digitax HS Code", "write"):
-        frappe.throw("You don't have permission to reload Digitax codes.")
+        frappe.throw(_("You don't have permission to reload Digitax codes."))
 
     reload_digitax_category_codes()
-    frappe.msgprint("Digitax codes have been reloaded successfully.")
+    frappe.msgprint(_("Digitax codes have been reloaded successfully."))
 
 
 @frappe.whitelist()

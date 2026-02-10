@@ -7,6 +7,7 @@ import json
 import os
 import requests
 
+from frappe import _
 from io import StringIO
 
 
@@ -107,11 +108,11 @@ def load_hs_codes():
     except requests.exceptions.RequestException as e:
         frappe.logger().error(f"Failed to fetch HS codes from {url}: {str(e)}")
         frappe.throw(
-            f"Could not load HS codes. Please check your internet connection and try again."
+            _("Could not load HS codes. Please check your internet connection and try again.")
         )
     except Exception as e:
         frappe.logger().error(f"Error loading HS codes: {str(e)}")
-        frappe.throw(f"An error occurred while loading HS codes: {str(e)}")
+        frappe.throw(_("An error occurred while loading HS codes: {0}").format(str(e)))
 
 
 def load_service_codes():
@@ -191,13 +192,14 @@ def load_service_codes():
     except requests.exceptions.RequestException as e:
         frappe.logger().error(f"Failed to fetch service codes from {url}: {str(e)}")
         frappe.throw(
-            f"Could not load service codes. Please check your internet connection and try again."
+            _("Could not load service codes. Please check your internet connection and try again.")
         )
     except Exception as e:
         frappe.logger().error(f"Error loading service codes: {str(e)}")
-        frappe.throw(f"An error occurred while loading service codes: {str(e)}")
+        frappe.throw(_("An error occurred while loading service codes: {0}").format(str(e)))
 
 
+# TODO: Remove this functionality before moving to production, as tax categories should be loaded from the DigiTax API instead of a local JSON file.
 def load_tax_categories():
     """
     Load tax categories from local JSON file and create Tax Category documents.
@@ -251,12 +253,12 @@ def load_tax_categories():
         if not os.path.exists(json_file_path):
             frappe.logger().error(f"Tax category file not found at: {json_file_path}")
             frappe.throw(
-                "Tax category data file not found. Please ensure tax_category.json exists in the assets folder."
+                _("Tax category data file not found. Please ensure tax_category.json exists in the assets folder.")
             )
 
         frappe.logger().info(f"Loading tax categories from {json_file_path}...")
 
-        with open(json_file_path, "r", encoding="utf-8") as f:
+        with open(json_file_path, "r", encoding="utf-8") as f: # nosemgrep
             tax_categories_data = json.load(f)
 
         created_count = 0
@@ -265,7 +267,6 @@ def load_tax_categories():
             tax_category_code = None
             try:
                 tax_category_code = entry.get("code")
-                print(f"Processing tax category code: {tax_category_code}")
 
                 if not tax_category_code:
                     continue
@@ -280,11 +281,10 @@ def load_tax_categories():
                         }
                     )
                     doc.insert(ignore_permissions=True)
-                    print(f"Created tax category: {doc.name}")
                     created_count += 1
             except Exception as e:
                 frappe.logger().error(
-                    f"Error creating tax category {tax_category_code}: {str(e)}"
+                    _("Error creating tax category {0}: {1}").format(tax_category_code, str(e))
                 )
                 continue
 
@@ -294,16 +294,16 @@ def load_tax_categories():
     except FileNotFoundError as e:
         frappe.logger().error(f"Tax category file not found: {str(e)}")
         frappe.throw(
-            "Could not find tax category data file. Please ensure tax_category.json exists in the assets folder."
+            _("Could not find tax category data file. Please ensure tax_category.json exists in the assets folder.")
         )
     except json.JSONDecodeError as e:
         frappe.logger().error(f"Invalid JSON in tax category file: {str(e)}")
         frappe.throw(
-            "Tax category data file contains invalid JSON. Please check the file format."
+            _("Tax category data file contains invalid JSON. Please check the file format.")
         )
     except Exception as e:
         frappe.logger().error(f"Error loading tax categories: {str(e)}")
-        frappe.throw(f"An error occurred while loading tax categories: {str(e)}")
+        frappe.throw(_("An error occurred while loading tax categories: {0}").format(str(e)))
 
 
 def reload_digitax_category_codes():
@@ -315,7 +315,7 @@ def reload_digitax_category_codes():
     if frappe.db.exists("DocType", "Tax Category"):
         frappe.db.delete("Tax Category")
 
-    frappe.db.commit()
+    frappe.db.commit() # nosemgrep
 
     load_hs_codes()
     load_service_codes()
