@@ -24,7 +24,6 @@
   {
    "fieldname": "api_key",
    "fieldtype": "Password",
-   "in_list_view": 1,
    "label": "API Key",
    "reqd": 1
   },
@@ -32,6 +31,7 @@
    "default": "0",
    "fieldname": "is_anabled",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Is Anabled"
   },
   {
@@ -39,7 +39,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "https://api.digitax.tech/ng/v1/items",
+   "default": "https://api.digitax.tech/ng/v1",
    "fieldname": "base_url",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -50,7 +50,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-10 14:37:56.861033",
+ "modified": "2026-02-10 14:58:23.044800",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "DigiTax Environment",
