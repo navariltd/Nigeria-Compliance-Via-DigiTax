@@ -14,12 +14,13 @@ bench install-app nigeria_compliance_via_digitax
 
 ## Features
 
-### Automatic HS Code and Service Code Loading
+### Automatic Data Loading on Installation
 
 When the app is installed, it automatically loads:
 
 - **HS Codes** for Items from [hs-codes.json](https://raw.githubusercontent.com/namiri-tech/docs-rdme-ng/refs/heads/v1.0/assets/hs-codes.json)
 - **Service Codes** from [service-codes.csv](https://raw.githubusercontent.com/namiri-tech/docs-rdme-ng/refs/heads/v1.0/assets/service-codes.csv)
+- **Tax Categories** from [DigiTax API](https://api.digitax.tech/ng/v1/resources/tax-categories)
 
 These codes are required for DigiTax integration to generate unique item IDs for tax compliance.
 
