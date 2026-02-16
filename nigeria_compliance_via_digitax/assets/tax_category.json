@@ -1,146 +1,146 @@
 [
   {
-    "code": "STANDARD_GST",
-    "name": "Standard Goods and Services Tax",
+    "tax_code": "STANDARD_GST",
+    "category_name": "Standard Goods and Services Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "STANDARD_VAT",
-    "name": "Standard Value-Added Tax",
+    "tax_code": "STANDARD_VAT",
+    "category_name": "Standard Value-Added Tax",
     "tax_rate": 0.075,
-    "has_rate": true
+    "has_tax_rate": 1
   },
   {
-    "code": "REDUCED_VAT",
-    "name": "Reduced Value-Added Tax",
+    "tax_code": "REDUCED_VAT",
+    "category_name": "Reduced Value-Added Tax",
     "tax_rate": 0.075,
-    "has_rate": true
+    "has_tax_rate": 1
   },
   {
-    "code": "STATE_SALES_TAX",
-    "name": "State Sales Tax",
+    "tax_code": "STATE_SALES_TAX",
+    "category_name": "State Sales Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "ALCOHOL_EXCISE_TAX",
-    "name": "Alcohol Excise Tax",
+    "tax_code": "ALCOHOL_EXCISE_TAX",
+    "category_name": "Alcohol Excise Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "CORPORATE_INCOME_TAX",
-    "name": "Corporate Income Tax",
+    "tax_code": "CORPORATE_INCOME_TAX",
+    "category_name": "Corporate Income Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "EXPORT_DUTY",
-    "name": "Export Duty",
+    "tax_code": "EXPORT_DUTY",
+    "category_name": "Export Duty",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "SERVICE_TAX",
-    "name": "Service Tax",
+    "tax_code": "SERVICE_TAX",
+    "category_name": "Service Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "REDUCED_GST",
-    "name": "Reduced Goods and Services Tax",
+    "tax_code": "REDUCED_GST",
+    "category_name": "Reduced Goods and Services Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "FUEL_EXCISE_TAX",
-    "name": "Fuel Excise Tax",
+    "tax_code": "FUEL_EXCISE_TAX",
+    "category_name": "Fuel Excise Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "PERSONAL_INCOME_TAX",
-    "name": "Personal Income Tax",
+    "tax_code": "PERSONAL_INCOME_TAX",
+    "category_name": "Personal Income Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "SOCIAL_SECURITY_TAX",
-    "name": "Social Security Tax",
+    "tax_code": "SOCIAL_SECURITY_TAX",
+    "category_name": "Social Security Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "MEDICARE_TAX",
-    "name": "Medicare Tax",
+    "tax_code": "MEDICARE_TAX",
+    "category_name": "Medicare Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "PERSONAL_PROPERTY_TAX",
-    "name": "Personal Property Tax",
+    "tax_code": "PERSONAL_PROPERTY_TAX",
+    "category_name": "Personal Property Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "PLASTIC_TAX",
-    "name": "Plastic Tax",
+    "tax_code": "PLASTIC_TAX",
+    "category_name": "Plastic Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "IMPORT_DUTY",
-    "name": "Import Duty",
+    "tax_code": "IMPORT_DUTY",
+    "category_name": "Import Duty",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "TOBACCO_EXCISE_TAX",
-    "name": "Tobacco Excise Tax",
+    "tax_code": "TOBACCO_EXCISE_TAX",
+    "category_name": "Tobacco Excise Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "REAL_ESTATE_TAX",
-    "name": "Real Estate Tax",
+    "tax_code": "REAL_ESTATE_TAX",
+    "category_name": "Real Estate Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "TOURISM_TAX",
-    "name": "Tourism Tax",
+    "tax_code": "TOURISM_TAX",
+    "category_name": "Tourism Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "ZERO_GST",
-    "name": "Zero Goods and Services Tax",
+    "tax_code": "ZERO_GST",
+    "category_name": "Zero Goods and Services Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "ZERO_VAT",
-    "name": "Zero Value-Added Tax",
+    "tax_code": "ZERO_VAT",
+    "category_name": "Zero Value-Added Tax",
     "tax_rate": 0,
-    "has_rate": true
+    "has_tax_rate": 1
   },
   {
-    "code": "LOCAL_SALES_TAX",
-    "name": "Local Sales Tax",
+    "tax_code": "LOCAL_SALES_TAX",
+    "category_name": "Local Sales Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "CARBON_TAX",
-    "name": "Carbon Tax",
+    "tax_code": "CARBON_TAX",
+    "category_name": "Carbon Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   },
   {
-    "code": "LUXURY_TAX",
-    "name": "Luxury Tax",
+    "tax_code": "LUXURY_TAX",
+    "category_name": "Luxury Tax",
     "tax_rate": null,
-    "has_rate": false
+    "has_tax_rate": 0
   }
 ]
