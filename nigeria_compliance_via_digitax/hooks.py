@@ -17,7 +17,7 @@ add_to_apps_screen = [
         "logo": "/assets/nigeria_compliance_via_digitax/assets/logo.png",
         "title": "Nigeria Compliance Via Digitax",
         "route": "/nigeria_compliance_via_digitax",
-        "has_permission": "nigeria_compliance_via_digitax.api.permission.has_app_permission",
+        "has_permission": "nigeria_compliance_via_digitax.permission.has_app_permission",
     }
 ]
 
