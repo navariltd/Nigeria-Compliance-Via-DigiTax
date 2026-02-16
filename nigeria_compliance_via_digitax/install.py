@@ -234,16 +234,16 @@ def load_tax_categories():
             - Tax categories are loaded from: assets/tax_category.json
     """
     try:
-        if not frappe.db.exists("DocType", "Tax Category"):
+        if not frappe.db.exists("DocType", "Digitax Tax Category"):
             frappe.logger().warning(
-                "Tax Category doctype not found. Skipping tax category import."
+                "Digitax Tax Category doctype not found. Skipping tax category import."
             )
             return
 
-        existing_count = frappe.db.count("Tax Category")
+        existing_count = frappe.db.count("Digitax Tax Category")
         if existing_count > 0:
             frappe.logger().info(
-                f"Found {existing_count} existing Tax Categories. Skipping import."
+                f"Found {existing_count} existing Digitax Tax Categories. Skipping import."
             )
             return
 
@@ -264,27 +264,31 @@ def load_tax_categories():
         created_count = 0
 
         for entry in tax_categories_data:
-            tax_category_code = None
+            category_name = None
             try:
-                tax_category_code = entry.get("code")
+                tax_code = entry.get("tax_code", "")
+                category_name = entry.get("category_name", "")
+                tax_rate = entry.get("tax_rate")
+                has_tax_rate = entry.get("has_tax_rate", False)
 
-                if not tax_category_code:
+                if not tax_code or not category_name:
                     continue
 
-                if not frappe.db.exists("Tax Category", tax_category_code):
+                if not frappe.db.exists("Digitax Tax Category", category_name):
                     doc = frappe.get_doc(
                         {
-                            "doctype": "Tax Category",
-                            "name": tax_category_code,  # Explicitly set name to exact code
-                            "title": tax_category_code,
-                            "disabled": 0,
+                            "doctype": "Digitax Tax Category",
+                            "category_name": category_name,
+                            "tax_code": tax_code,
+                            "tax_rate": tax_rate,
+                            "has_tax_rate": has_tax_rate,
                         }
                     )
                     doc.insert(ignore_permissions=True)
                     created_count += 1
             except Exception as e:
                 frappe.logger().error(
-                    _("Error creating tax category {0}: {1}").format(tax_category_code, str(e))
+                    _("Error creating tax category {0}: {1}").format(category_name, str(e))
                 )
                 continue
 
@@ -311,9 +315,9 @@ def reload_digitax_category_codes():
 
     frappe.db.delete("Digitax HS Code")
 
-    # Only delete Tax Categories if the doctype exists
-    if frappe.db.exists("DocType", "Tax Category"):
-        frappe.db.delete("Tax Category")
+    # Only delete Digitax Tax Categories if the doctype exists
+    if frappe.db.exists("DocType", "Digitax Tax Category"):
+        frappe.db.delete("Digitax Tax Category")
 
     frappe.db.commit() # nosemgrep
 

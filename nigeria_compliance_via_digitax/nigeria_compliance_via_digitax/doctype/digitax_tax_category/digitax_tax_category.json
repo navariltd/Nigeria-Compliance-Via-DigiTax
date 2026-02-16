@@ -1,45 +1,56 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:hscode",
- "creation": "2026-02-10 15:32:03.402245",
+ "autoname": "field:category_name",
+ "creation": "2026-02-16 12:48:53.504026",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "category",
-  "hscode",
-  "description"
+  "category_name",
+  "tax_code",
+  "column_break_iweq",
+  "has_tax_rate",
+  "tax_rate"
  ],
  "fields": [
   {
-   "fieldname": "hscode",
+   "fieldname": "category_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "HS Code",
+   "label": "Category Name",
    "reqd": 1,
    "unique": 1
   },
   {
-   "fieldname": "description",
-   "fieldtype": "Small Text",
-   "label": "Description"
+   "fieldname": "column_break_iweq",
+   "fieldtype": "Column Break"
   },
   {
-   "fieldname": "category",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Category",
-   "options": "Item\nService",
-   "reqd": 1
+   "fieldname": "tax_code",
+   "fieldtype": "Data",
+   "label": "Tax Code"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_tax_rate",
+   "fieldtype": "Check",
+   "label": "Has Tax Rate"
+  },
+  {
+   "depends_on": "eval:doc.has_tax_rate == 1;",
+   "fieldname": "tax_rate",
+   "fieldtype": "Float",
+   "label": "Tax Rate",
+   "mandatory_depends_on": "eval:doc.has_tax_rate == 1;"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 14:54:44.913979",
+ "modified": "2026-02-16 13:01:11.317170",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
- "name": "Digitax HS Code",
+ "name": "Digitax Tax Category",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

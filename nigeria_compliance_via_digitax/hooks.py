@@ -21,6 +21,10 @@ add_to_apps_screen = [
     }
 ]
 
+fixtures = [
+    {"doctype": "Custom Field", "filters": {"module": "Nigeria Compliance Via Digitax"}}
+]
+
 # Includes in <head>
 # ------------------
 

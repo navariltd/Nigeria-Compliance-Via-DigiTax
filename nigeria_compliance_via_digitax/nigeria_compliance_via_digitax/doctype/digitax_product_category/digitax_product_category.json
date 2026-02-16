@@ -1,45 +1,47 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:hscode",
- "creation": "2026-02-10 15:32:03.402245",
+ "autoname": "field:category_name",
+ "creation": "2026-02-16 13:04:57.599968",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "category",
-  "hscode",
-  "description"
+  "category_name",
+  "hs_code",
+  "column_break_gtwv",
+  "is_service"
  ],
  "fields": [
   {
-   "fieldname": "hscode",
+   "fieldname": "category_name",
    "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "HS Code",
-   "reqd": 1,
+   "label": "Category Name",
    "unique": 1
   },
   {
-   "fieldname": "description",
-   "fieldtype": "Small Text",
-   "label": "Description"
+   "fieldname": "column_break_gtwv",
+   "fieldtype": "Column Break"
   },
   {
-   "fieldname": "category",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Category",
-   "options": "Item\nService",
-   "reqd": 1
+   "default": "0",
+   "fieldname": "is_service",
+   "fieldtype": "Check",
+   "label": "Is Service"
+  },
+  {
+   "fieldname": "hs_code",
+   "fieldtype": "Link",
+   "label": "HS Code",
+   "options": "Digitax HS Code"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 14:54:44.913979",
+ "modified": "2026-02-16 14:33:10.042503",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
- "name": "Digitax HS Code",
+ "name": "Digitax Product Category",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

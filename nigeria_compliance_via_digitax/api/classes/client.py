@@ -10,14 +10,29 @@ class DigitaxClient:
 		if not company:
 			company = frappe.defaults.get_user_default("company")
 
-		self.settings = frappe.get_doc("FIRS Settings", {"company": company})
-		self.environment = frappe.get_doc("DigiTax Environment", self.settings.environment_name)
+		self.settings = self._get_settings()
+		self.environment = self._get_environment()
 		self.base_url = self.environment.base_url
-		self.api_key = frappe.get_password("DigiTax Environment", self.settings.environment_name, "api_key")
-		self.headers = {
+		self.api_key = self._get_api_key()
+		self.headers = self._get_auth_headers()
+
+	def _get_auth_headers(self):
+		return {
 			"Content-Type": "application/json",
 			"X-API-KEY": self.api_key
 		}
+
+	def _get_api_key(self):
+		return frappe.get_password("DigiTax Environment", self.settings.environment_name, "api_key")
+
+	def _get_environment(self):
+		environment_name = self.settings.environment_name
+		environment = frappe.get_doc("DigiTax Environment", environment_name)
+		return environment
+
+	def _get_settings(self):
+		settings = frappe.get_doc("FIRS Settings", {"company": self.settings.company})
+		return settings
 
 	def post(self, endpoint, data):
 		url = f"{self.base_url}{endpoint}"
