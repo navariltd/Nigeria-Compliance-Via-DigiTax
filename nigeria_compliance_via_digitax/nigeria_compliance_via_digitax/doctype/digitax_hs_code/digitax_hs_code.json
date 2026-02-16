@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:hscode",
  "creation": "2026-02-10 15:32:03.402245",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -15,7 +16,8 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "HS Code",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "description",
@@ -34,10 +36,11 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-10 15:39:35.986130",
+ "modified": "2026-02-16 14:54:44.913979",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "Digitax HS Code",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
