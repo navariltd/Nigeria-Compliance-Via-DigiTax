@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "category_name",
+  "hs_code",
   "column_break_gtwv",
   "is_service"
  ],
@@ -26,12 +27,18 @@
    "fieldname": "is_service",
    "fieldtype": "Check",
    "label": "Is Service"
+  },
+  {
+   "fieldname": "hs_code",
+   "fieldtype": "Link",
+   "label": "HS Code",
+   "options": "Digitax HS Code"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 13:06:19.640207",
+ "modified": "2026-02-16 14:33:10.042503",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "Digitax Product Category",
