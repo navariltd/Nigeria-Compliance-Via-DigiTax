@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 """
-Utility functions for managing Digitax HS Codes, Service Codes, and Tax Categories.
+Utility functions for managing FIRS HS Codes, Service Codes, and Tax Categories.
 These can be called from the Frappe console or programmatically.
 """
 
@@ -25,7 +25,7 @@ def reload_codes():
     Usage from Frappe console:
             frappe.call("nigeria_compliance_via_digitax.utils.reload_codes")
     """
-    if not frappe.has_permission("Digitax HS Code", "write"):
+    if not frappe.has_permission("FIRS HS Code", "write"):
         frappe.throw(_("You don't have permission to reload Digitax codes."))
 
     reload_digitax_category_codes()
@@ -45,9 +45,9 @@ def get_codes_stats():
         tax_category_count = frappe.db.count("Tax Category")
 
     return {
-        "total_codes": frappe.db.count("Digitax HS Code"),
-        "item_codes": frappe.db.count("Digitax HS Code", {"category": "Item"}),
-        "service_codes": frappe.db.count("Digitax HS Code", {"category": "Service"}),
+        "total_codes": frappe.db.count("FIRS HS Code"),
+        "item_codes": frappe.db.count("FIRS HS Code", {"category": "Item"}),
+        "service_codes": frappe.db.count("FIRS HS Code", {"category": "Service"}),
         "tax_categories": tax_category_count,
     }
 

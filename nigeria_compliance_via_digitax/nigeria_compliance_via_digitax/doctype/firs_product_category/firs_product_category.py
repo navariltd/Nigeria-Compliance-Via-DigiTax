@@ -7,8 +7,6 @@ from frappe.model.document import Document
 
 class FIRSProductCategory(Document):
     def before_save(self):
-        commodity_type = frappe.db.get_value(
-            "Digitax HS Code", self.hs_code, "category"
-        )
+        commodity_type = frappe.db.get_value("FIRS HS Code", self.hs_code, "category")
 
         self.is_service = commodity_type == "Service"
