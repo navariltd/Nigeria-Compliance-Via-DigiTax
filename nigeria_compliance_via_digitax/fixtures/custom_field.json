@@ -212,7 +212,7 @@
   "length": 0,
   "link_filters": null,
   "mandatory_depends_on": "",
-  "modified": "2026-02-17 11:46:48.051854",
+  "modified": "2026-02-17 12:23:46.733464",
   "module": "Nigeria Compliance Via Digitax",
   "name": "Item-custom_digitax_id",
   "no_copy": 0,
@@ -224,15 +224,15 @@
   "print_hide": 0,
   "print_hide_if_no_value": 0,
   "print_width": null,
-  "read_only": 0,
+  "read_only": 1,
   "read_only_depends_on": null,
   "report_hide": 0,
   "reqd": 0,
   "search_index": 0,
   "show_dashboard": 0,
   "sort_options": 0,
-  "translatable": 1,
-  "unique": 0,
+  "translatable": 0,
+  "unique": 1,
   "width": null
  }
 ]
