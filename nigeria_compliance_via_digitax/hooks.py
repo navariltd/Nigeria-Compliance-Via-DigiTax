@@ -136,13 +136,11 @@ after_install = "nigeria_compliance_via_digitax.install.after_install"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+    "Item": {
+        "on_update": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.item.get_digitax_item_code"
+    }
+}
 
 # Scheduled Tasks
 # ---------------
