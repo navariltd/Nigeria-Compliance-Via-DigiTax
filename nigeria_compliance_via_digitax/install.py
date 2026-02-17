@@ -30,13 +30,13 @@ def load_hs_codes():
     Load and populate HS (Harmonized System) codes from a remote JSON source.
 
     This function fetches HS codes from Namiri-Tech GitHub repository and imports them
-    into the Digitax HS Code doctype. It skips the import if HS codes for
+    into the FIRS HS Code doctype. It skips the import if HS codes for
     the "Item" category already exist in the database.
 
     The function performs the following steps:
     1. Sends a GET request to fetch HS codes from the remote URL
     2. Checks if Item HS codes already exist in the database
-    3. Iterates through each HS code entry and creates new Digitax HS Code documents
+    3. Iterates through each HS code entry and creates new FIRS HS Code documents
     4. Skips entries that already exist or lack required fields
     5. Commits all changes to the database
 
@@ -50,7 +50,7 @@ def load_hs_codes():
 
     Side Effects:
             - Logs info and error messages to the Frappe logger
-            - Creates new "Digitax HS Code" documents in the database
+            - Creates new "FIRS HS Code" documents in the database
             - Commits database transactions
             - May display error messages to the user via frappe.throw()
 
@@ -68,7 +68,7 @@ def load_hs_codes():
 
         hs_codes_data = response.json()
 
-        existing_count = frappe.db.count("Digitax HS Code", {"category": "Item"})
+        existing_count = frappe.db.count("FIRS HS Code", {"category": "Item"})
         if existing_count > 0:
             frappe.logger().info(
                 f"Found {existing_count} existing Item HS codes. Skipping import."
@@ -86,11 +86,11 @@ def load_hs_codes():
                     continue
 
                 if not frappe.db.exists(
-                    "Digitax HS Code", {"hscode": hscode, "category": "Item"}
+                    "FIRS HS Code", {"hscode": hscode, "category": "Item"}
                 ):
                     doc = frappe.get_doc(
                         {
-                            "doctype": "Digitax HS Code",
+                            "doctype": "FIRS HS Code",
                             "category": "Item",
                             "hscode": hscode,
                             "description": description,
@@ -108,7 +108,9 @@ def load_hs_codes():
     except requests.exceptions.RequestException as e:
         frappe.logger().error(f"Failed to fetch HS codes from {url}: {str(e)}")
         frappe.throw(
-            _("Could not load HS codes. Please check your internet connection and try again.")
+            _(
+                "Could not load HS codes. Please check your internet connection and try again."
+            )
         )
     except Exception as e:
         frappe.logger().error(f"Error loading HS codes: {str(e)}")
@@ -117,16 +119,16 @@ def load_hs_codes():
 
 def load_service_codes():
     """
-    Load service codes from a remote CSV file and populate the Digitax HS Code database.
+    Load service codes from a remote CSV file and populate the FIRS HS Code database.
 
-    This function fetches service codes from Namiri-Tech GitHub repository and creates Digitax HS Code
+    This function fetches service codes from Namiri-Tech GitHub repository and creates FIRS HS Code
     records in the database. It skips the import if service codes already exist to prevent
     duplicates.
 
     Process:
     1. Fetches service codes from a remote CSV URL with a 30-second timeout
     2. Checks if service codes already exist in the database
-    3. Iterates through CSV rows and creates new Digitax HS Code documents for each unique code
+    3. Iterates through CSV rows and creates new FIRS HS Code documents for each unique code
     4. Logs errors for individual records without stopping the entire process
     5. Commits all changes to the database upon completion
 
@@ -138,7 +140,7 @@ def load_service_codes():
             None
 
     Side Effects:
-            - Creates new Digitax HS Code records in the database
+            - Creates new FIRS HS Code records in the database
             - Logs info and error messages using frappe.logger()
             - Commits database transactions
     """
@@ -152,7 +154,7 @@ def load_service_codes():
         csv_data = StringIO(response.text)
         csv_reader = csv.DictReader(csv_data)
 
-        existing_count = frappe.db.count("Digitax HS Code", {"category": "Service"})
+        existing_count = frappe.db.count("FIRS HS Code", {"category": "Service"})
         if existing_count > 0:
             frappe.logger().info(
                 f"Found {existing_count} existing Service codes. Skipping import."
@@ -170,11 +172,11 @@ def load_service_codes():
                     continue
 
                 if not frappe.db.exists(
-                    "Digitax HS Code", {"hscode": code, "category": "Service"}
+                    "FIRS HS Code", {"hscode": code, "category": "Service"}
                 ):
                     doc = frappe.get_doc(
                         {
-                            "doctype": "Digitax HS Code",
+                            "doctype": "FIRS HS Code",
                             "category": "Service",
                             "hscode": code,
                             "description": description,
@@ -192,11 +194,15 @@ def load_service_codes():
     except requests.exceptions.RequestException as e:
         frappe.logger().error(f"Failed to fetch service codes from {url}: {str(e)}")
         frappe.throw(
-            _("Could not load service codes. Please check your internet connection and try again.")
+            _(
+                "Could not load service codes. Please check your internet connection and try again."
+            )
         )
     except Exception as e:
         frappe.logger().error(f"Error loading service codes: {str(e)}")
-        frappe.throw(_("An error occurred while loading service codes: {0}").format(str(e)))
+        frappe.throw(
+            _("An error occurred while loading service codes: {0}").format(str(e))
+        )
 
 
 # TODO: Remove this functionality before moving to production, as tax categories should be loaded from the DigiTax API instead of a local JSON file.
@@ -234,16 +240,16 @@ def load_tax_categories():
             - Tax categories are loaded from: assets/tax_category.json
     """
     try:
-        if not frappe.db.exists("DocType", "Digitax Tax Category"):
+        if not frappe.db.exists("DocType", "FIRS Tax Category"):
             frappe.logger().warning(
-                "Digitax Tax Category doctype not found. Skipping tax category import."
+                "FIRS Tax Category doctype not found. Skipping tax category import."
             )
             return
 
-        existing_count = frappe.db.count("Digitax Tax Category")
+        existing_count = frappe.db.count("FIRS Tax Category")
         if existing_count > 0:
             frappe.logger().info(
-                f"Found {existing_count} existing Digitax Tax Categories. Skipping import."
+                f"Found {existing_count} existing FIRS Tax Categories. Skipping import."
             )
             return
 
@@ -253,12 +259,14 @@ def load_tax_categories():
         if not os.path.exists(json_file_path):
             frappe.logger().error(f"Tax category file not found at: {json_file_path}")
             frappe.throw(
-                _("Tax category data file not found. Please ensure tax_category.json exists in the assets folder.")
+                _(
+                    "Tax category data file not found. Please ensure tax_category.json exists in the assets folder."
+                )
             )
 
         frappe.logger().info(f"Loading tax categories from {json_file_path}...")
 
-        with open(json_file_path, "r", encoding="utf-8") as f: # nosemgrep
+        with open(json_file_path, "r", encoding="utf-8") as f:  # nosemgrep
             tax_categories_data = json.load(f)
 
         created_count = 0
@@ -274,10 +282,10 @@ def load_tax_categories():
                 if not tax_code or not category_name:
                     continue
 
-                if not frappe.db.exists("Digitax Tax Category", category_name):
+                if not frappe.db.exists("FIRS Tax Category", category_name):
                     doc = frappe.get_doc(
                         {
-                            "doctype": "Digitax Tax Category",
+                            "doctype": "FIRS Tax Category",
                             "category_name": category_name,
                             "tax_code": tax_code,
                             "tax_rate": tax_rate,
@@ -288,7 +296,9 @@ def load_tax_categories():
                     created_count += 1
             except Exception as e:
                 frappe.logger().error(
-                    _("Error creating tax category {0}: {1}").format(category_name, str(e))
+                    _("Error creating tax category {0}: {1}").format(
+                        category_name, str(e)
+                    )
                 )
                 continue
 
@@ -298,28 +308,34 @@ def load_tax_categories():
     except FileNotFoundError as e:
         frappe.logger().error(f"Tax category file not found: {str(e)}")
         frappe.throw(
-            _("Could not find tax category data file. Please ensure tax_category.json exists in the assets folder.")
+            _(
+                "Could not find tax category data file. Please ensure tax_category.json exists in the assets folder."
+            )
         )
     except json.JSONDecodeError as e:
         frappe.logger().error(f"Invalid JSON in tax category file: {str(e)}")
         frappe.throw(
-            _("Tax category data file contains invalid JSON. Please check the file format.")
+            _(
+                "Tax category data file contains invalid JSON. Please check the file format."
+            )
         )
     except Exception as e:
         frappe.logger().error(f"Error loading tax categories: {str(e)}")
-        frappe.throw(_("An error occurred while loading tax categories: {0}").format(str(e)))
+        frappe.throw(
+            _("An error occurred while loading tax categories: {0}").format(str(e))
+        )
 
 
 def reload_digitax_category_codes():
     frappe.logger().info("Reloading Digitax category codes...")
 
-    frappe.db.delete("Digitax HS Code")
+    frappe.db.delete("FIRS HS Code")
 
-    # Only delete Digitax Tax Categories if the doctype exists
-    if frappe.db.exists("DocType", "Digitax Tax Category"):
-        frappe.db.delete("Digitax Tax Category")
+    # Only delete FIRS Tax Categories if the doctype exists
+    if frappe.db.exists("DocType", "FIRS Tax Category"):
+        frappe.db.delete("FIRS Tax Category")
 
-    frappe.db.commit() # nosemgrep
+    frappe.db.commit()  # nosemgrep
 
     load_hs_codes()
     load_service_codes()

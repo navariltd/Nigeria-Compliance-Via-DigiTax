@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class DigitaxTaxCategory(Document):
+class FIRSTaxCategory(Document):
 	pass

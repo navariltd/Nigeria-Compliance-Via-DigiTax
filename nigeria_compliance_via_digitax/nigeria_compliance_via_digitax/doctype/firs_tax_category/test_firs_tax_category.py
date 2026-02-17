@@ -13,9 +13,9 @@ IGNORE_TEST_RECORD_DEPENDENCIES = []  # eg. ["User"]
 
 
 
-class IntegrationTestDigitaxHSCode(IntegrationTestCase):
+class IntegrationTestFIRSTaxCategory(IntegrationTestCase):
 	"""
-	Integration tests for DigitaxHSCode.
+	Integration tests for FIRSTaxCategory.
 	Use this class for testing interactions between multiple components.
 	"""
 

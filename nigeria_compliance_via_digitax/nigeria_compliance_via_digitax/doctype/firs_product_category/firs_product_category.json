@@ -2,55 +2,46 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "field:category_name",
- "creation": "2026-02-16 12:48:53.504026",
+ "creation": "2026-02-16 13:04:57.599968",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "category_name",
-  "tax_code",
-  "column_break_iweq",
-  "has_tax_rate",
-  "tax_rate"
+  "hs_code",
+  "column_break_gtwv",
+  "is_service"
  ],
  "fields": [
   {
    "fieldname": "category_name",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Category Name",
-   "reqd": 1,
    "unique": 1
   },
   {
-   "fieldname": "column_break_iweq",
+   "fieldname": "column_break_gtwv",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "tax_code",
-   "fieldtype": "Data",
-   "label": "Tax Code"
-  },
-  {
    "default": "0",
-   "fieldname": "has_tax_rate",
+   "fieldname": "is_service",
    "fieldtype": "Check",
-   "label": "Has Tax Rate"
+   "label": "Is Service"
   },
   {
-   "depends_on": "eval:doc.has_tax_rate == 1;",
-   "fieldname": "tax_rate",
-   "fieldtype": "Float",
-   "label": "Tax Rate",
-   "mandatory_depends_on": "eval:doc.has_tax_rate == 1;"
+   "fieldname": "hs_code",
+   "fieldtype": "Link",
+   "label": "HS Code",
+   "options": "FIRS HS Code"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 13:01:11.317170",
+ "modified": "2026-02-17 09:24:09.682825",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
- "name": "Digitax Tax Category",
+ "name": "FIRS Product Category",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
