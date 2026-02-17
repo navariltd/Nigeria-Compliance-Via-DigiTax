@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 
 
-class DigitaxProductCategory(Document):
+class FIRSProductCategory(Document):
     def before_save(self):
         commodity_type = frappe.db.get_value(
             "Digitax HS Code", self.hs_code, "category"
