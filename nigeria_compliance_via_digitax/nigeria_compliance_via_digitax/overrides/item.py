@@ -3,15 +3,7 @@ from nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.api.classes.c
 
 
 def get_digitax_item_code(doc, method=None):
-	frappe.logger().info(f"DEBUG: calling get_digitax_item_code for item {doc.name}")
-	print(
-		"DEBUG: calling get_digitax_item_code on item save"
-	)  # This goes to bench console
-
 	if not doc.allow_firs_tracking:
-		frappe.logger().info(
-			f"Skipping FIRS tracking for item {doc.name} - allow_firs_tracking is False"
-		)
 		return
 
 	# Required data
@@ -31,10 +23,7 @@ def get_digitax_item_code(doc, method=None):
 		"is_service": bool(is_service),
 	}
 
-	print("Request data for DigiTax API: ", req_data)
-
 	api_response = client.post("/items", req_data)
-	print("DigiTax Item ID response: ", api_response.get("id") if api_response else "No response")  # Log the ID from the response
 
 	if api_response:
 		digitax_item_id = api_response.get("id")
