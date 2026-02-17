@@ -22,6 +22,8 @@
   {
    "fieldname": "description",
    "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Description"
   },
   {
@@ -36,7 +38,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 14:54:44.913979",
+ "modified": "2026-02-17 12:11:32.316974",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "FIRS HS Code",

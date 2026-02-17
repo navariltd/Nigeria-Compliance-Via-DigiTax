@@ -44,7 +44,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Environment",
-   "link_filters": "[[\"DigiTax Environment\",\"is_anabled\",\"=\",1]]",
+   "link_filters": "[[\"DigiTax Environment\",\"is_disabled\",\"=\",0]]",
    "options": "DigiTax Environment",
    "reqd": 1
   }
@@ -52,7 +52,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-10 14:14:29.006883",
+ "modified": "2026-02-17 11:06:45.077597",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "FIRS Settings",
