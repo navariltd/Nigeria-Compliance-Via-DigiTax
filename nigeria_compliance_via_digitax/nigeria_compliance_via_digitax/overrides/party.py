@@ -158,7 +158,7 @@ def _sync_with_digitax(doc, party_data: Dict[str, Any]) -> None:
 	try:
 		results = _call_digitax_api(party_data)
 		digitax_id, is_active = "", False
-		
+
 		if results:
 			digitax_id, is_active = results
 
@@ -295,7 +295,7 @@ def _format_phone_number(phone: str) -> str:
 	if not phone:
 		return ""
 
-	digits = "".join(filter(str.isdigit, phone))
+	digits = "".join(char for char in phone if char.isdigit())
 
 	if not digits:
 		return ""
