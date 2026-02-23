@@ -139,6 +139,9 @@ after_install = "nigeria_compliance_via_digitax.install.after_install"
 doc_events = {
     "Item": {
         "on_update": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.item.get_digitax_item_code"
+    },
+    "Customer": {
+        "on_update": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.party.get_digitax_party_code"
     }
 }
 
