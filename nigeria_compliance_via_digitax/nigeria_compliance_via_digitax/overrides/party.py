@@ -77,9 +77,27 @@ def get_digitax_party_code(doc, method: Optional[str] = None) -> None:
 	# Call Digitax API
 	try:
 		client = DigitaxClient()
-		api_response = client.post("/parties", req_data)
+		api_response = client.post("/parties", req_data) or {}
 
 		print(api_response)
+		# Save DigiTax party code in custom field
+		id = api_response.get("id", None)
+
+		if not id:
+			frappe.log_error(
+				title="DigiTax Party Sync Failed",
+				message=f"Party: {doc.name}\nError: No party code returned from DigiTax API.\nResponse: {api_response}",
+			)
+			frappe.msgprint(
+				msg=_(
+					"Failed to sync party with DigiTax. No party code returned from API. The party has been saved locally."
+				),
+				title=_("Sync Warning"),
+				indicator="orange",
+			)
+			return
+
+		doc.db_set("custom_digitax_id", id)
 	except DigitaxAPIException as e:
 		frappe.log_error(
 			title="DigiTax Party Sync Failed",
