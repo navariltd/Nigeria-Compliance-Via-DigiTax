@@ -93,7 +93,9 @@ class DigitaxClient:
 	def _extract_error_message(self, error: requests.exceptions.HTTPError) -> str:
 		try:
 			response_data = error.response.json()
-			return response_data.get("message") or response_data.get("error") or str(error)
+			return (
+				response_data.get("message") or response_data.get("error") or str(error)
+			)
 		except:
 			return error.response.text or str(error)
 
@@ -169,12 +171,158 @@ class DigitaxClient:
 
 		return None
 
+	def put(
+		self,
+		endpoint: str,
+		path_param: str,
+		data: Dict[str, Any],
+		reference_doctype: Optional[str] = None,
+		reference_docname: Optional[str] = None,
+	) -> Optional[Dict[str, Any]]:
+		"""
+		Make a PUT request to the DigiTax API
+
+		Args:
+			endpoint: API endpoint (e.g., "/items")
+			path_param: Path parameter to append to endpoint (e.g., "item-id-123")
+			data: Request payload
+			reference_doctype: DocType of the document making this request (e.g., "Item")
+			reference_docname: Name of the document making this request (e.g., "PRODUCT-001")
+
+		Returns:
+			Response data as dictionary or None if request fails
+
+		Raises:
+			DigitaxAPIException: If the API request fails
+		"""
+		# Build endpoint with path parameter
+		endpoint_with_param = f"{endpoint.rstrip('/')}/{path_param}"
+		url = self._build_url(endpoint_with_param)
+		integration_request = None
+
+		try:
+			# Create Integration Request to log this API call
+			integration_request = self._create_integration_request(
+				url=url,
+				request_data=data,
+				reference_doctype=reference_doctype,
+				reference_docname=reference_docname,
+				method="PUT",
+			)
+
+			frappe.logger().info(f"DigiTax API Request: PUT {url}")
+			frappe.logger().debug(f"Request data: {json.dumps(data, indent=2)}")
+
+			response = requests.put(
+				url, headers=self.headers, data=json.dumps(data), timeout=self.timeout
+			)
+
+			response.raise_for_status()
+			response_data = response.json()
+
+			frappe.logger().info(f"DigiTax API Response: {response.status_code}")
+			frappe.logger().debug(
+				f"Response data: {json.dumps(response_data, indent=2)}"
+			)
+
+			# Update Integration Request with successful response
+			self._update_integration_request(
+				integration_request=integration_request,
+				status="Completed",
+				response_data=response_data,
+				status_code=response.status_code,
+			)
+
+			return response_data
+
+		except requests.exceptions.HTTPError as e:
+			self._handle_http_error(e, url, integration_request)
+		except requests.exceptions.ConnectionError as e:
+			self._handle_connection_error(e, url, integration_request)
+		except requests.exceptions.Timeout as e:
+			self._handle_timeout_error(e, url, integration_request)
+		except requests.exceptions.RequestException as e:
+			self._handle_generic_error(e, url, integration_request)
+		except json.JSONDecodeError as e:
+			self._handle_json_error(e, url, integration_request)
+
+		return None
+
+	def get(
+		self,
+		endpoint: str,
+		reference_doctype: Optional[str] = None,
+		reference_docname: Optional[str] = None,
+	) -> Optional[Dict[str, Any]]:
+		"""
+		Make a GET request to the DigiTax API
+
+		Args:
+			endpoint: API endpoint (e.g., "/resources/invoice-types")
+			reference_doctype: DocType of the document making this request
+			reference_docname: Name of the document making this request
+
+		Returns:
+			Response data as dictionary or None if request fails
+
+		Raises:
+			DigitaxAPIException: If the API request fails
+		"""
+		url = self._build_url(endpoint)
+		integration_request = None
+
+		try:
+			# Create Integration Request to log this API call
+			integration_request = self._create_integration_request(
+				url=url,
+				request_data={},
+				reference_doctype=reference_doctype,
+				reference_docname=reference_docname,
+				method="GET",
+			)
+
+			frappe.logger().info(f"DigiTax API Request: GET {url}")
+
+			response = requests.get(url, headers=self.headers, timeout=self.timeout)
+
+			response.raise_for_status()
+			response_data = response.json()
+
+			frappe.logger().info(f"DigiTax API Response: {response.status_code}")
+			frappe.logger().debug(
+				f"Response data: {json.dumps(response_data, indent=2)}"
+			)
+
+			# Update Integration Request with successful response
+			self._update_integration_request(
+				integration_request=integration_request,
+				status="Completed",
+				response_data=response_data,
+				status_code=response.status_code,
+			)
+
+			return response_data
+
+		except requests.exceptions.HTTPError as e:
+			self._handle_http_error(e, url, integration_request)
+		except requests.exceptions.ConnectionError as e:
+			self._handle_connection_error(e, url, integration_request)
+		except requests.exceptions.Timeout as e:
+			self._handle_timeout_error(e, url, integration_request)
+		except requests.exceptions.RequestException as e:
+			self._handle_generic_error(e, url, integration_request)
+		except json.JSONDecodeError as e:
+			self._handle_json_error(e, url, integration_request)
+
+		return None
+
 	def _create_integration_request(
 		self,
 		url: str,
 		request_data: dict,
 		reference_doctype: Optional[str] = None,
 		reference_docname: Optional[str] = None,
+		method: str = "POST",
 	):
 		"""Create an Integration Request document to log the API call"""
 		try:
@@ -183,7 +331,7 @@ class DigitaxClient:
 					"doctype": "Integration Request",
 					"integration_type": "Remote",
 					"integration_request_service": "DigiTax Nigeria",
-					"method": "POST",
+					"method": method,
 					"url": url,
 					"request_headers": json.dumps(
 						self._sanitize_headers(self.headers), indent=2

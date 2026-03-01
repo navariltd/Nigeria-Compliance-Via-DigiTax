@@ -5,7 +5,7 @@ Handles synchronization of Customer/Supplier party data with DigiTax API.
 """
 
 import frappe
-from typing import Optional, Dict, Any, Union
+from typing import Optional, Dict, Any
 from frappe import _
 from nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.api.classes.client import (
 	DigitaxClient,
@@ -140,7 +140,7 @@ def _build_party_payload(doc, address) -> Dict[str, Any]:
 			"street_name": address.address_line1 or "",
 			"city_name": address.city or "",
 			"postal_zone": address.pincode or "",
-			"country_code": _get_country_alpha3_code(address.country),
+			"country_code": _get_country_alpha3_code(address.country), # TODO: Update to avoid extra db call
 			"local_government_code": "",
 			"state_code": address.state or "",
 		},
