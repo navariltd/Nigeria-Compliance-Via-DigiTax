@@ -6,6 +6,7 @@ Utility functions for managing FIRS HS Codes, Service Codes, and Tax Categories.
 These can be called from the Frappe console or programmatically.
 """
 
+
 import frappe
 from frappe import _
 from nigeria_compliance_via_digitax.install import (
@@ -17,6 +18,7 @@ from nigeria_compliance_via_digitax.install import (
 from nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.api.classes.client import (
     DigitaxClient,
 )
+from typing import Union, Any, Dict, List
 
 
 @frappe.whitelist()
@@ -26,7 +28,7 @@ def reload_codes():
     This will clear existing codes and reload them.
 
     Usage from Frappe console:
-		frappe.call("nigeria_compliance_via_digitax.utils.reload_codes")
+                frappe.call("nigeria_compliance_via_digitax.utils.reload_codes")
     """
     if not frappe.has_permission("FIRS HS Code", "write"):
         frappe.throw(_("You don't have permission to reload Digitax codes."))
@@ -41,7 +43,7 @@ def get_codes_stats():
     Get statistics about loaded Digitax codes and Tax Categories.
 
     Returns:
-		dict: Statistics including counts of Items, Services, and Tax Categories
+                dict: Statistics including counts of Items, Services, and Tax Categories
     """
     tax_category_count = 0
     if frappe.db.exists("DocType", "Tax Category"):
@@ -62,7 +64,7 @@ def load_codes_if_missing():
     Useful for ensuring codes are available without duplicating.
 
     Usage from Frappe console:
-		frappe.call("nigeria_compliance_via_digitax.utils.load_codes_if_missing")
+                frappe.call("nigeria_compliance_via_digitax.utils.load_codes_if_missing")
     """
     stats = get_codes_stats()
 
@@ -83,7 +85,7 @@ def load_codes_if_missing():
 
 
 @frappe.whitelist()
-def fetch_invoice_type_codes(company=None):
+def fetch_invoice_type_codes(company: Union[str, None] = None) -> dict[Any, Any]:
     """
     Fetch Invoice Type Codes from DigiTax API and create FIRS Invoice Type documents.
 
@@ -120,7 +122,7 @@ def fetch_invoice_type_codes(company=None):
             title="Fetch Invoice Type Codes Error", message=frappe.get_traceback()
         )
         frappe.throw(_("Error fetching invoice type codes: {0}").format(str(e)))
-
+        return {"success": False, "message": str(e), "stats": None, "errors": [str(e)]}
 
 
 def _validate_invoice_types_response(response):
