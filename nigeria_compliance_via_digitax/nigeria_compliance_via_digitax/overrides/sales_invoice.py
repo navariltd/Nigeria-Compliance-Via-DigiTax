@@ -105,9 +105,6 @@ def _update_invoice_from_response(doc, response: Dict[str, Any]) -> None:
 		if response.get(response_field) is not None:
 			doc.db_set(doc_field, response.get(response_field), update_modified=False)
 
-	if response.get("signed_at"):
-		doc.db_set("nc_submitted_to_firs", 1, update_modified=False)
-
 
 def _validate_invoice_data(doc) -> None:
 	"""
