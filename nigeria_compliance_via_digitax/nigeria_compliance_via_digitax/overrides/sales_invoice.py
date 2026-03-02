@@ -291,8 +291,9 @@ def _handle_unexpected_error(doc, error: Exception) -> None:
         message=f"Sales Invoice: {doc.name}\nError: {str(error)}\n{frappe.get_traceback()}",
     )
 
+    error_message = f"Sales Invoice: {doc.name}\nError: {str(error)}\n{frappe.get_traceback()}"
     frappe.msgprint(
-        _(f"Sales Invoice: {doc.name}\nError: {str(error)}\n{frappe.get_traceback()}"),
+        error_message,
         title=_("DigiTax Submission Warning"),
         indicator="orange",
     )
