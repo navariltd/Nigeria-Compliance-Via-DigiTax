@@ -185,6 +185,7 @@ def _get_unique_identifier(doctype, doc_data):
     unique_fields = {
         "FIRS Invoice Type": "code",
         "FIRS Tax Category": "category_name",
+        "FIRS Country Codes": "country",
     }
 
     field_name = unique_fields.get(doctype, "name")
@@ -390,3 +391,77 @@ def fetch_tax_category_codes(company: Union[str, None] = None):
             title="Fetch Tax Category Codes Error", message=frappe.get_traceback()
         )
         frappe.throw(_("Error fetching tax category codes: {0}").format(str(e)))
+
+
+def _map_country_codes(api_data):
+    """
+    Map API response to FIRS Country Codes document fields.
+
+    API Response fields:
+        - name -> country
+        - alpha2 -> alpha2
+        - alpha3 -> alpha3
+
+    Args:
+        api_data: Dictionary from API response
+
+    Returns:
+        dict: Mapped document data
+    """
+    name = api_data.get("name")
+    alpha2 = api_data.get("alpha2")
+    alpha3 = api_data.get("alpha3")
+
+    if not name or not alpha2 or not alpha3:
+        return None
+
+    return {
+        "doctype": "FIRS Country Codes",
+        "country": name,
+        "alpha2": alpha2,
+        "alpha3": alpha3,
+    }
+
+
+@frappe.whitelist()
+def fetch_country_codes(company: Union[str, None] = None):
+    """
+    Fetch Country Codes from DigiTax API and create FIRS Country Codes documents.
+
+    Args:
+        company: Company name (optional, defaults to user's default company)
+
+    Returns:
+        dict: Result containing success status, message, and statistics
+    """
+    try:
+        client = DigitaxClient(company=company)
+        resources = _fetch_resources_from_api(
+            client, "resources/countries", "FIRS Settings"
+        )
+        stats, errors = _process_resources(
+            resources, "FIRS Country Codes", _map_country_codes
+        )
+
+        frappe.db.commit()
+
+        result_message = _build_result_message(stats, "Country Codes")
+
+        return {
+            "success": True,
+            "message": result_message,
+            "stats": {
+                "total_fetched": len(resources),
+                "created": stats["created"],
+                "updated": stats["updated"],
+                "skipped": stats["skipped"],
+                "errors": stats["errors"],
+            },
+            "errors": errors if errors else None,
+        }
+
+    except Exception as e:
+        frappe.log_error(
+            title="Fetch Country Codes Error", message=frappe.get_traceback()
+        )
+        frappe.throw(_("Error fetching country codes: {0}").format(str(e)))

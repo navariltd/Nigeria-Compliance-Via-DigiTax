@@ -18,9 +18,6 @@ def after_install():
 
     load_hs_codes()
     load_service_codes()
-    # Tax categories should be loaded from DigiTax API via FIRS Settings
-    # load_tax_categories()
-    load_country_codes()
 
     frappe.logger().info(
         "Nigeria Compliance Via Digitax installation setup completed successfully."
@@ -207,124 +204,6 @@ def load_service_codes():
         )
 
 
-def load_country_codes():
-    """
-    Load country codes from local JSON file and create FIRS Country Code documents.
-
-    This function reads country codes from a local JSON file in the assets folder and creates
-    FIRS Country Code documents in the ERPNext system. Each country entry includes the country
-    name, alpha2 code (2-letter), and alpha3 code (3-letter) as per ISO 3166 standard.
-
-    Process:
-    1. Checks if country codes already exist in the database
-    2. Reads country codes from the local JSON file
-    3. Iterates through the JSON data and creates new FIRS Country Code documents
-    4. Logs errors for individual records without stopping the entire process
-    5. Commits all changes to the database upon completion
-
-    Raises:
-            frappe.ValidationError: If the file cannot be read or if a general error occurs
-                    during the loading process
-
-    Returns:
-            None
-
-    Side Effects:
-            - Creates new FIRS Country Codes records in the database
-            - Logs info and error messages using frappe.logger()
-            - Commits database transactions
-
-    Note:
-            - The function checks if FIRS Country Codes doctype is available in the system
-            - Existing country codes are not reimported
-            - The function uses ignore_permissions=True when inserting documents
-            - Country codes are loaded from: assets/firs_country_codes.json
-    """
-    try:
-        if not frappe.db.exists("DocType", "FIRS Country Codes"):
-            frappe.logger().warning(
-                "FIRS Country Codes doctype not found. Skipping country code import."
-            )
-            return
-
-        existing_count = frappe.db.count("FIRS Country Codes")
-        if existing_count > 0:
-            frappe.logger().info(
-                f"Found {existing_count} existing FIRS Country Codes. Skipping import."
-            )
-            return
-
-        app_path = frappe.get_app_path("nigeria_compliance_via_digitax")
-        json_file_path = os.path.join(app_path, "assets", "firs_country_codes.json")
-
-        if not os.path.exists(json_file_path):
-            frappe.logger().error(f"Country codes file not found at: {json_file_path}")
-            frappe.throw(
-                _(
-                    "Country codes data file not found. Please ensure firs_country_codes.json exists in the assets folder."
-                )
-            )
-
-        frappe.logger().info(f"Loading country codes from {json_file_path}...")
-
-        with open(json_file_path, "r", encoding="utf-8") as f:  # nosemgrep
-            country_codes_data = json.load(f)
-
-        created_count = 0
-
-        for entry in country_codes_data:
-            country_name = None
-            try:
-                country_name = entry.get("name", "")
-                alpha2 = entry.get("alpha2", "")
-                alpha3 = entry.get("alpha3", "")
-
-                if not country_name or not alpha3:
-                    continue
-
-                if not frappe.db.exists("FIRS Country Codes", country_name):
-                    doc = frappe.get_doc(
-                        {
-                            "doctype": "FIRS Country Codes",
-                            "country": country_name,
-                            "alpha2": alpha2,
-                            "alpha3": alpha3,
-                        }
-                    )
-                    doc.insert(ignore_permissions=True)
-                    created_count += 1
-            except Exception as e:
-                frappe.logger().error(
-                    _("Error creating country code {0}: {1}").format(
-                        country_name, str(e)
-                    )
-                )
-                continue
-
-        frappe.db.commit()
-        frappe.logger().info(f"Successfully loaded {created_count} country codes.")
-
-    except FileNotFoundError as e:
-        frappe.logger().error(f"Country codes file not found: {str(e)}")
-        frappe.throw(
-            _(
-                "Could not find country codes data file. Please ensure firs_country_codes.json exists in the assets folder."
-            )
-        )
-    except json.JSONDecodeError as e:
-        frappe.logger().error(f"Invalid JSON in country codes file: {str(e)}")
-        frappe.throw(
-            _(
-                "Country codes data file contains invalid JSON. Please check the file format."
-            )
-        )
-    except Exception as e:
-        frappe.logger().error(f"Error loading country codes: {str(e)}")
-        frappe.throw(
-            _("An error occurred while loading country codes: {0}").format(str(e))
-        )
-
-
 def reload_digitax_category_codes():
     frappe.logger().info("Reloading Digitax category codes...")
 
@@ -342,6 +221,5 @@ def reload_digitax_category_codes():
 
     load_hs_codes()
     load_service_codes()
-    load_country_codes()
 
     frappe.logger().info("Digitax codes reloaded successfully.")
