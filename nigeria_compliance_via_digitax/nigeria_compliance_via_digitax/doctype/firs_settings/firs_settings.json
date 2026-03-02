@@ -12,7 +12,11 @@
     "environment",
     "allow_firs_tracking_sales",
     "fetch_section",
-    "fetch_invoice_type_codes"
+    "fetch_invoice_type_codes",
+    "column_break_fetch",
+    "fetch_tax_category_codes",
+    "column_break_fetch_2",
+    "fetch_country_codes"
   ],
   "fields": [
     {
@@ -59,6 +63,24 @@
       "fieldname": "fetch_invoice_type_codes",
       "fieldtype": "Button",
       "label": "Invoice Type Codes"
+    },
+    {
+      "fieldname": "column_break_fetch",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "fetch_tax_category_codes",
+      "fieldtype": "Button",
+      "label": "Tax Category Codes"
+    },
+    {
+      "fieldname": "column_break_fetch_2",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "fetch_country_codes",
+      "fieldtype": "Button",
+      "label": "Country Codes"
     }
   ],
   "grid_page_length": 50,
