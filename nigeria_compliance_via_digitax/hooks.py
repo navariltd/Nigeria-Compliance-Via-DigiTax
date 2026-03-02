@@ -47,7 +47,7 @@ fixtures = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {"Sales Invoice": "public/js/sales_invoice.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -145,8 +145,8 @@ doc_events = {
     },
     "Sales Invoice": {
         "before_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.submit_sales_invoice",
-		"validate": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.set_firs_invoice_type",
-	},
+        "validate": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.set_firs_invoice_type",
+    },
 }
 
 # Scheduled Tasks
