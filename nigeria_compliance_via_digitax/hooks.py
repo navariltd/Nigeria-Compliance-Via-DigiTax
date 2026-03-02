@@ -142,7 +142,11 @@ doc_events = {
     },
     "Customer": {
         "on_update": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.party.get_digitax_party_code"
-    }
+    },
+    "Sales Invoice": {
+        "before_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.submit_sales_invoice",
+		"validate": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.set_firs_invoice_type",
+	},
 }
 
 # Scheduled Tasks
