@@ -1,7 +1,7 @@
 import frappe
 from typing import Optional, Dict, Any, List
 from frappe import _
-from frappe.utils import nowdate
+from frappe.utils import nowdate, get_datetime
 from nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.api.classes.client import (
     DigitaxClient,
     DigitaxAPIException,
@@ -86,6 +86,7 @@ def _update_invoice_from_response(doc, response: Dict[str, Any]) -> None:
     field_mapping = {
         "invoice_number": "nc_invoice_number",
         "signed_at": "nc_signed_at",
+        "validated_at": "nc_validated_at",
         "payment_status": "nc_payment_status",
         "invoice_reference_number": "nc_invoice_reference_number",
         "tax_currency_code": "nc_tax_currency_code",
@@ -97,13 +98,29 @@ def _update_invoice_from_response(doc, response: Dict[str, Any]) -> None:
         "payable_amount": "nc_payable_amount",
         "tax_amount": "nc_tax_amount",
     }
+
+    datetime_fields = ["signed_at", "validated_at"]
+
     is_valid = True if response.get("is_valid") else False
 
-    doc.db_set("nc_is_valid", is_valid)
+    doc.db_set("nc_is_firs_valid", is_valid)
 
     for response_field, doc_field in field_mapping.items():
         if response.get(response_field) is not None:
-            doc.db_set(doc_field, response.get(response_field), update_modified=False)
+            value = response.get(response_field)
+
+            # Convert datetime strings to proper datetime objects
+            if response_field in datetime_fields and isinstance(value, str):
+                try:
+                    value = get_datetime(value)
+                except Exception as e:
+                    frappe.log_error(
+                        title="DateTime Conversion Error",
+                        message=f"Failed to convert {response_field}: {value}\nError: {str(e)}",
+                    )
+                    continue
+
+            doc.db_set(doc_field, value, update_modified=False)
 
 
 def _validate_invoice_data(doc) -> None:
