@@ -149,7 +149,6 @@ doc_events = {
     },
     "Payment Entry": {
         "on_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.payment_entry.update_invoice_payment_status",
-        "on_cancel": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.payment_entry.update_invoice_payment_status",
     },
 }
 
