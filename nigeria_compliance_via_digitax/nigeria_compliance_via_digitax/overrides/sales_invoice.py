@@ -84,6 +84,7 @@ def _update_invoice_from_response(doc, response: Dict[str, Any]) -> None:
 		response: DigiTax API response dictionary
     """
     field_mapping = {
+        "id": "nc_invoice_id",
         "invoice_number": "nc_invoice_number",
         "signed_at": "nc_signed_at",
         "validated_at": "nc_validated_at",
