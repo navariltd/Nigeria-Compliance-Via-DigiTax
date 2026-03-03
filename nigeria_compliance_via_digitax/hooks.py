@@ -147,6 +147,9 @@ doc_events = {
         "before_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.submit_sales_invoice",
         "validate": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.set_firs_invoice_type",
     },
+    "Payment Entry": {
+        "on_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.payment_entry.update_invoice_payment_status",
+    },
 }
 
 # Scheduled Tasks

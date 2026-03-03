@@ -27,8 +27,8 @@ def get_digitax_party_code(doc, method: Optional[str] = None) -> None:
 	requirements, and creates/updates the party record in DigiTax.
 
 	Args:
-			doc: The Customer or Supplier document being saved
-			method: Hook method name (optional, not used)
+		doc: The Customer or Supplier document being saved
+		method: Hook method name (optional, not used)
 	"""
 	if not _should_sync_party(doc):
 		return
@@ -46,10 +46,10 @@ def _should_sync_party(doc) -> bool:
 	Determine if the party should be synced with DigiTax.
 
 	Args:
-			doc: The party document
+		doc: The party document
 
 	Returns:
-			True if the party has a Tax ID and should be synced
+		True if the party has a Tax ID and should be synced
 	"""
 	if not doc.tax_id:
 		frappe.logger().info(
@@ -64,10 +64,10 @@ def _get_party_address(doc) -> None | Any:
 	Retrieve the primary or first available address for a party.
 
 	Args:
-			doc: The party document (Customer/Supplier)
+		doc: The party document (Customer/Supplier)
 
 	Returns:
-			Address document if found, None otherwise
+		Address document if found, None otherwise
 	"""
 	address_links = _fetch_address_links(doc)
 
@@ -84,10 +84,10 @@ def _fetch_address_links(doc) -> list:
 	Fetch all address links for a party document.
 
 	Args:
-			doc: The party document
+		doc: The party document
 
 	Returns:
-			List of address link records
+		List of address link records
 	"""
 	return frappe.get_all(
 		"Dynamic Link",
@@ -105,10 +105,10 @@ def _find_primary_address(address_links: list) -> str:
 	Find the primary address from a list of address links.
 
 	Args:
-			address_links: List of address link records
+		address_links: List of address link records
 
 	Returns:
-			Name of the primary address, or first address if no primary found
+		Name of the primary address, or first address if no primary found
 	"""
 	for link in address_links:
 		addr = frappe.get_value(
@@ -125,11 +125,11 @@ def _build_party_payload(doc, address) -> Dict[str, Any]:
 	Build the payload for DigiTax party API request.
 
 	Args:
-			doc: The party document
-			address: The address document
+		doc: The party document
+		address: The address document
 
 	Returns:
-			Dictionary containing formatted party data for DigiTax API
+		Dictionary containing formatted party data for DigiTax API
 	"""
 	return {
 		"name": doc.name,
@@ -152,8 +152,8 @@ def _sync_with_digitax(doc, party_data: Dict[str, Any]) -> None:
 	Send party data to DigiTax API and save the returned party code.
 
 	Args:
-			doc: The party document
-			party_data: Formatted party data payload
+		doc: The party document
+		party_data: Formatted party data payload
 	"""
 	try:
 		results = _call_digitax_api(party_data)
@@ -181,10 +181,10 @@ def _call_digitax_api(party_data: Dict[str, Any]) -> Optional[tuple[str, bool]]:
 	Make API call to DigiTax to create/update party.
 
 	Args:
-			party_data: The party data payload
+		party_data: The party data payload
 
 	Returns:
-			The DigiTax party ID and is_active if successful, None otherwise
+		The DigiTax party ID and is_active if successful, None otherwise
 	"""
 	client = DigitaxClient()
 	response = client.post(DIGITAX_PARTY_ENDPOINT, party_data)
@@ -260,10 +260,10 @@ def _get_country_alpha3_code(country_name: str) -> str:
 	Get the ISO Alpha-3 country code from FIRS Country Codes.
 
 	Args:
-			country_name: Name of the country
+		country_name: Name of the country
 
 	Returns:
-			The Alpha-3 country code, or empty string if not found
+		The Alpha-3 country code, or empty string if not found
 	"""
 	if not country_name:
 		return ""
@@ -287,10 +287,10 @@ def _format_phone_number(phone: str) -> str:
 	the Nigeria country code (+234).
 
 	Args:
-			phone: The phone number to format
+		phone: The phone number to format
 
 	Returns:
-			Formatted phone number with + prefix (e.g., +234801234567)
+		Formatted phone number with + prefix (e.g., +234801234567)
 	"""
 	if not phone:
 		return ""
