@@ -6,6 +6,7 @@ from nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.api.classes.c
     DigitaxClient,
     DigitaxAPIException,
 )
+from nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.doctype import firs_settings
 
 
 def submit_sales_invoice(doc, method: Optional[str] = None) -> None:
@@ -20,8 +21,6 @@ def submit_sales_invoice(doc, method: Optional[str] = None) -> None:
 		doc: The Sales Invoice document being submitted
 		method: Hook method name (optional, not used)
     """
-    print("DEBUG: SUBMISSION PROCESS STARTED...")
-    # Check if FIRS tracking is enabled for this company
     if not _should_submit_to_digitax(doc):
         return
 
@@ -67,9 +66,9 @@ def _should_submit_to_digitax(doc) -> bool:
     if not frappe.db.exists("FIRS Settings", {"company": doc.company}):
         return False
 
-    firs_settings = frappe.get_doc("FIRS Settings", {"company": doc.company})
+    allow_firs_tracking_sales = frappe.db.get_value("FIRS Settings", {"company": doc.company}, "allow_firs_tracking_sales")
 
-    if not firs_settings.allow_firs_tracking_sales:
+    if not allow_firs_tracking_sales:
         return False
 
     return True
