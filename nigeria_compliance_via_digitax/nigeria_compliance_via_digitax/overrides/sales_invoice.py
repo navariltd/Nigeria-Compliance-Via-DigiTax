@@ -43,6 +43,10 @@ def submit_sales_invoice(doc, method: Optional[str] = None) -> None:
         if response:
             # Map response fields to document fields
             _update_invoice_from_response(doc, response)
+        
+            if doc.is_return and doc.get("return_against"):
+                _sync_original_invoice_payment_status_after_credit_note(doc)
+
 
             frappe.msgprint(
                 _("Invoice successfully submitted to DigiTax"),
@@ -387,4 +391,91 @@ def get_invoice_from_digitax(
         frappe.throw(
             _("An unexpected error occurred: {0}").format(str(e)),
             title=_("Error"),
+        )
+
+
+def _sync_original_invoice_payment_status_after_credit_note(credit_note_doc) -> None:
+    """
+    Synchronize the payment status of the original sales invoice after a credit note is created.
+
+    This function retrieves the original sales invoice referenced in the credit note and updates
+    its payment status to "PAID" in DigiTax when the remaining outstanding amount becomes zero
+    (i.e., when the credit note fully offsets the invoice balance).
+
+    Args:
+        credit_note_doc: The credit note document object containing the reference to the
+                         original sales invoice via the "return_against" field.
+
+    Returns:
+        None
+
+    Raises:
+        Logs errors to Frappe's error log in the following cases:
+        - DigitaxAPIException: When the API call to update payment status fails.
+        - Exception: For any other unexpected errors during execution.
+
+    Notes:
+        - Requires the original invoice to exist and be in submitted state (docstatus == 1).
+        - Requires the original invoice to have a DigiTax invoice ID (nc_invoice_id).
+        - Only updates payment status when remaining_amount equals zero.
+        - Updates the invoice document with the response data from DigiTax.
+    """
+    try:
+        original_invoice_name = credit_note_doc.get("return_against")
+        if not original_invoice_name:
+            return
+
+        if not frappe.db.exists("Sales Invoice", original_invoice_name):
+            return
+
+        invoice = frappe.get_doc("Sales Invoice", original_invoice_name)
+        invoice.reload()
+
+        if invoice.docstatus != 1:
+            return
+
+        if not invoice.get("nc_invoice_id"):
+            frappe.log_error(
+                title="Credit Note Payment Status Sync Skipped",
+                message=(
+                    f"Original Sales Invoice {invoice.name} has no DigiTax invoice ID. "
+                    f"Credit Note: {credit_note_doc.name}"
+                ),
+            )
+            return
+
+        remaining_amount = invoice.outstanding_amount + credit_note_doc.grand_total
+
+        if remaining_amount != 0:
+            return
+
+        client = DigitaxClient(company=invoice.company)
+        response = client.put(
+            endpoint="/invoices",
+            path_param=f"{invoice.nc_invoice_id}/payment-status",
+            data={"payment_status": "PAID"},
+            reference_doctype="Sales Invoice",
+            reference_docname=invoice.name,
+        )
+
+        if response:
+            _update_invoice_from_response(invoice, response)
+
+    except DigitaxAPIException as e:
+        frappe.log_error(
+            title="Credit Note Payment Status Sync Failed",
+            message=(
+                f"Credit Note: {credit_note_doc.name}\n"
+                f"Original Invoice: {credit_note_doc.get('return_against')}\n"
+                f"Error: {str(e)}"
+            ),
+        )
+    except Exception as e:
+        frappe.log_error(
+            title="Credit Note Payment Status Sync Error",
+            message=(
+                f"Credit Note: {credit_note_doc.name}\n"
+                f"Original Invoice: {credit_note_doc.get('return_against')}\n"
+                f"Error: {str(e)}\n{frappe.get_traceback()}"
+            ),
         )
