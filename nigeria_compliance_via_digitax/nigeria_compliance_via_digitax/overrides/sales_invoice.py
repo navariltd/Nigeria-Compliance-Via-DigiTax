@@ -6,7 +6,6 @@ from nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.api.classes.c
     DigitaxClient,
     DigitaxAPIException,
 )
-from nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.doctype import firs_settings
 
 
 def submit_sales_invoice(doc, method: Optional[str] = None) -> None:
@@ -18,20 +17,24 @@ def submit_sales_invoice(doc, method: Optional[str] = None) -> None:
     prepares the payload and submits the invoice data to DigiTax.
 
     Args:
-		doc: The Sales Invoice document being submitted
-		method: Hook method name (optional, not used)
+        doc: The Sales Invoice document being submitted
+        method: Hook method name (optional, not used)
     """
-    if not _should_submit_to_digitax(doc):
-        return
 
     try:
-        # Validate required data
         _validate_invoice_data(doc)
 
         invoice_payload = _build_invoice_payload(doc)
         client = DigitaxClient(company=doc.company)
+
+        # Determine endpoint based on invoice type
+        if doc.is_return:
+            endpoint = "/credit-notes"
+        else:
+            endpoint = "/invoices"
+
         response = client.post(
-            endpoint="/invoices",
+            endpoint=endpoint,
             data=invoice_payload,
             reference_doctype="Sales Invoice",
             reference_docname=doc.name,
@@ -53,34 +56,13 @@ def submit_sales_invoice(doc, method: Optional[str] = None) -> None:
         _handle_unexpected_error(doc, e)
 
 
-def _should_submit_to_digitax(doc) -> bool:
-    """
-    Check if the invoice should be submitted to DigiTax.
-
-    Args:
-		doc: Sales Invoice document
-
-    Returns:
-		True if invoice should be submitted, False otherwise
-    """
-    if not frappe.db.exists("FIRS Settings", {"company": doc.company}):
-        return False
-
-    allow_firs_tracking_sales = frappe.db.get_value("FIRS Settings", {"company": doc.company}, "allow_firs_tracking_sales")
-
-    if not allow_firs_tracking_sales:
-        return False
-
-    return True
-
-
 def _update_invoice_from_response(doc, response: Dict[str, Any]) -> None:
     """
     Update Sales Invoice fields from DigiTax API response.
 
     Args:
-		doc: Sales Invoice document
-		response: DigiTax API response dictionary
+        doc: Sales Invoice document
+        response: DigiTax API response dictionary
     """
     field_mapping = {
         "id": "nc_invoice_id",
@@ -131,10 +113,10 @@ def _validate_invoice_data(doc) -> None:
     Validate that the invoice has all required data for DigiTax submission.
 
     Args:
-		doc: Sales Invoice document
+        doc: Sales Invoice document
 
     Raises:
-		frappe.ValidationError: If required data is missing
+        frappe.ValidationError: If required data is missing
     """
     errors = []
 
@@ -164,12 +146,12 @@ def _build_invoice_payload(doc) -> Dict[str, Any]:
     Build the invoice payload for DigiTax API.
 
     Args:
-		doc: Sales Invoice document
+        doc: Sales Invoice document
 
     Returns:
-		Dictionary containing invoice data for DigiTax API
+        Dictionary containing invoice data for DigiTax API
     """
-    return {
+    payload = {
         "invoice_date": doc.posting_date,
         "issue_date": nowdate(),
         "invoice_type_code": _get_invoice_type_code(doc.get("firs_invoice_type")),
@@ -178,19 +160,35 @@ def _build_invoice_payload(doc) -> Dict[str, Any]:
         "items": _map_invoice_items(doc.items),
     }
 
+    # For credit notes
+    if doc.is_return and doc.get("return_against"):
+        original_invoice = frappe.get_doc("Sales Invoice", doc.return_against)
+        if original_invoice.get("nc_invoice_id"):
+            payload["invoice_id"] = original_invoice.nc_invoice_id
+            payload["return_date"] = doc.posting_date
+        else:
+            frappe.throw(
+                _(
+                    "Original invoice {0} does not have a DigiTax invoice ID. "
+                    "Please ensure the original invoice has been submitted to DigiTax."
+                ).format(doc.return_against)
+            )
+
+    return payload
+
 
 def _get_invoice_type_code(invoice_type_name: str) -> str:
     """
     Get the invoice type code from FIRS Invoice Type.
 
     Args:
-		invoice_type_name: Name/value of the FIRS Invoice Type
+        invoice_type_name: Name/value of the FIRS Invoice Type
 
     Returns:
-		Invoice type code
+        Invoice type code
 
     Raises:
-		frappe.ValidationError: If invoice type not found
+        frappe.ValidationError: If invoice type not found
     """
     if not invoice_type_name:
         frappe.throw(_("Invoice type is required"))
@@ -214,10 +212,10 @@ def _map_invoice_items(items: List) -> List[Dict[str, Any]]:
     Map Sales Invoice items to DigiTax API format.
 
     Args:
-		items: List of Sales Invoice Item documents
+        items: List of Sales Invoice Item documents
 
     Returns:
-		List of mapped item dictionaries
+        List of mapped item dictionaries
     """
     mapped_items = []
 
@@ -225,7 +223,7 @@ def _map_invoice_items(items: List) -> List[Dict[str, Any]]:
         mapped_items.append(
             {
                 "item_id": item.get("digitax_id"),
-                "quantity": item.qty,
+                "quantity": abs(item.qty),
                 "unit_price": item.rate,
                 "tax_rate": _get_tax_rate_from_firs_tax_category(
                     item.get("firs_tax_category")
@@ -241,10 +239,10 @@ def _get_tax_rate_from_firs_tax_category(tax_category_name: str) -> float:
     Fetch the tax rate from FIRS Tax Category.
 
     Args:
-		tax_category_name: Name of the FIRS Tax Category
+        tax_category_name: Name of the FIRS Tax Category
 
     Returns:
-		Tax rate as a float if found, otherwise 0
+        Tax rate as a float if found, otherwise 0
     """
     if not tax_category_name:
         return 0.0
@@ -261,8 +259,8 @@ def _handle_digitax_error(doc, error: DigitaxAPIException) -> None:
     Handle DigiTax API errors during invoice submission.
 
     Args:
-		doc: Sales Invoice document
-		error: DigiTax API exception
+        doc: Sales Invoice document
+        error: DigiTax API exception
     """
     frappe.log_error(
         title="DigiTax Invoice Submission Failed",
@@ -283,15 +281,17 @@ def _handle_unexpected_error(doc, error: Exception) -> None:
     Handle unexpected errors during invoice submission.
 
     Args:
-		doc: Sales Invoice document
-		error: Exception raised
+        doc: Sales Invoice document
+        error: Exception raised
     """
     frappe.log_error(
         title="DigiTax Invoice Submission Error",
         message=f"Sales Invoice: {doc.name}\nError: {str(error)}\n{frappe.get_traceback()}",
     )
 
-    error_message = f"Sales Invoice: {doc.name}\nError: {str(error)}\n{frappe.get_traceback()}"
+    error_message = (
+        f"Sales Invoice: {doc.name}\nError: {str(error)}\n{frappe.get_traceback()}"
+    )
     frappe.msgprint(
         error_message,
         title=_("DigiTax Submission Warning"),
@@ -304,8 +304,8 @@ def set_firs_invoice_type(doc, method=None):
     Auto-set FIRS Invoice Type based on invoice type.
 
     Args:
-		doc: Sales Invoice document
-		method: Hook method name (optional)
+        doc: Sales Invoice document
+        method: Hook method name (optional)
     """
     if not doc.get("firs_invoice_type"):
         if doc.is_return:
@@ -327,14 +327,14 @@ def get_invoice_from_digitax(
     It retrieves the latest invoice data from DigiTax and updates the document.
 
     Args:
-		sales_invoice: Name of the Sales Invoice document
-		invoice_reference_number: The invoice reference number from DigiTax
+        sales_invoice: Name of the Sales Invoice document
+        invoice_reference_number: The invoice reference number from DigiTax
 
     Returns:
-		Dictionary containing the updated invoice data
+        Dictionary containing the updated invoice data
 
     Raises:
-		frappe.ValidationError: If the invoice is not found or not submitted
+        frappe.ValidationError: If the invoice is not found or not submitted
     """
     # Validate that the invoice exists and is submitted
     if not frappe.db.exists("Sales Invoice", sales_invoice):
