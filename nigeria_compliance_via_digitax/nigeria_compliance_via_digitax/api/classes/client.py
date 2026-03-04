@@ -84,11 +84,13 @@ class DigitaxClient:
 		return {"Content-Type": "application/json", "X-API-KEY": self.api_key}
 
 	def _build_url(self, endpoint: str) -> str:
-		if not self.base_url.endswith("/"):
-			self.base_url += "/"
+		"""Build the complete URL from base URL and endpoint"""
+		base = self.base_url.rstrip("/")
+
 		if not endpoint.startswith("/"):
 			endpoint = f"/{endpoint}"
-		return f"{self.base_url}{endpoint}"
+
+		return f"{base}{endpoint}"
 
 	def _extract_error_message(self, error: requests.exceptions.HTTPError) -> str:
 		try:
@@ -98,6 +100,10 @@ class DigitaxClient:
 			)
 		except:
 			return error.response.text or str(error)
+
+	def _validate_sales_tracking_permission(self):
+		if not self.settings.allow_firs_tracking_sales:
+			raise DigitaxAPIException("Sales Tracking not allowed via settings")
 
 	def post(
 		self,
@@ -121,6 +127,8 @@ class DigitaxClient:
 		Raises:
 			DigitaxAPIException: If the API request fails
 		"""
+		self._validate_sales_tracking_permission()
+
 		url = self._build_url(endpoint)
 		integration_request = None
 
@@ -195,6 +203,8 @@ class DigitaxClient:
 		Raises:
 			DigitaxAPIException: If the API request fails
 		"""
+		self._validate_sales_tracking_permission()
+
 		# Build endpoint with path parameter
 		endpoint_with_param = f"{endpoint.rstrip('/')}/{path_param}"
 		url = self._build_url(endpoint_with_param)

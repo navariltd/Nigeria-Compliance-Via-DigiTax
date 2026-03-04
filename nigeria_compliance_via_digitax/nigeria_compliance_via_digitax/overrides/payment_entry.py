@@ -3,7 +3,6 @@ import frappe
 from frappe import _
 from typing import Optional
 from nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice import (
-	_should_submit_to_digitax,
 	_update_invoice_from_response,
 )
 from nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.api.classes.client import (
@@ -71,9 +70,6 @@ def _process_invoice_payment_update(invoice_name: str, payment_doc) -> None:
 	invoice = frappe.get_doc("Sales Invoice", invoice_name)
 
 	if invoice.docstatus != 1:
-		return
-
-	if not _should_submit_to_digitax(invoice):
 		return
 
 	if not invoice.get("nc_invoice_id"):
