@@ -340,7 +340,7 @@ class DigitaxClient:
 				{
 					"doctype": "Integration Request",
 					"integration_type": "Remote",
-					"integration_request_service": "DigiTax Nigeria",
+					"integration_request_service": reference_doctype,
 					"method": method,
 					"url": url,
 					"request_headers": json.dumps(
