@@ -23,7 +23,7 @@ def autoname_sales_invoice(doc, method: Optional[str] = None) -> None:
     """
     customer_part = re.sub(r"[^A-Za-z0-9]", "-", doc.customer or "").upper()
     customer_part = re.sub(r"-+", "-", customer_part).strip("-")
-    customer_part = customer_part[:16].strip("-")
+    customer_part = customer_part[:12].strip("-")
     doc.name = make_autoname(f"ACC-SINV-{customer_part}-.####")
 
 

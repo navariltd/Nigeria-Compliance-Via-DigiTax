@@ -186,9 +186,9 @@ doc_events = {
 # ------------------------------
 #
 # Specify custom mixins to extend the standard doctype controller.
-# extend_doctype_class = {
-# 	"Task": "nigeria_compliance_via_digitax.custom.task.CustomTaskMixin"
-# }
+extend_doctype_class = {
+    "Payment Reconciliation": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.payment_reconciliation.PaymentReconciliationMixin"
+}
 
 # Overriding Methods
 # ------------------------------
