@@ -1,11 +1,30 @@
+import re
 import frappe
 from typing import Optional, Dict, Any, List
 from frappe import _
+from frappe.model.naming import make_autoname
 from frappe.utils import nowdate, get_datetime
 from nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.api.classes.client import (
     DigitaxClient,
     DigitaxAPIException,
 )
+
+
+def autoname_sales_invoice(doc, method: Optional[str] = None) -> None:
+    """
+    Custom autoname for Sales Invoice.
+
+    Generates names in the format: ACC-SINV-{CUSTOMER}-####
+    where #### is a zero-padded 4-digit sequence tracked per customer.
+
+    Args:
+        doc: The Sales Invoice document
+        method: Hook method name (optional, not used)
+    """
+    customer_part = re.sub(r"[^A-Za-z0-9]", "-", doc.customer or "").upper()
+    customer_part = re.sub(r"-+", "-", customer_part).strip("-")
+    customer_part = customer_part[:16].strip("-")
+    doc.name = make_autoname(f"ACC-SINV-{customer_part}-.####")
 
 
 def submit_sales_invoice(doc, method: Optional[str] = None) -> None:
@@ -43,10 +62,9 @@ def submit_sales_invoice(doc, method: Optional[str] = None) -> None:
         if response:
             # Map response fields to document fields
             _update_invoice_from_response(doc, response)
-        
+
             if doc.is_return and doc.get("return_against"):
                 _sync_original_invoice_payment_status_after_credit_note(doc)
-
 
             frappe.msgprint(
                 _("Invoice successfully submitted to DigiTax"),
