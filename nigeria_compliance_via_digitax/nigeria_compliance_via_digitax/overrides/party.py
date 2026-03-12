@@ -156,7 +156,7 @@ def _sync_with_digitax(doc, party_data: Dict[str, Any]) -> None:
 		party_data: Formatted party data payload
 	"""
 	try:
-		results = _call_digitax_api(party_data)
+		results = _call_digitax_api(party_data, doc.doctype, doc.name)
 		digitax_id, is_active = "", False
 
 		if results:
@@ -176,7 +176,7 @@ def _sync_with_digitax(doc, party_data: Dict[str, Any]) -> None:
 		_handle_unexpected_exception(doc, e)
 
 
-def _call_digitax_api(party_data: Dict[str, Any]) -> Optional[tuple[str, bool]]:
+def _call_digitax_api(party_data: Dict[str, Any], reference_doctype: str, reference_docname: str) -> Optional[tuple[str, bool]]:
 	"""
 	Make API call to DigiTax to create/update party.
 
@@ -187,7 +187,7 @@ def _call_digitax_api(party_data: Dict[str, Any]) -> Optional[tuple[str, bool]]:
 		The DigiTax party ID and is_active if successful, None otherwise
 	"""
 	client = DigitaxClient()
-	response = client.post(DIGITAX_PARTY_ENDPOINT, party_data)
+	response = client.post(DIGITAX_PARTY_ENDPOINT, party_data, reference_doctype, reference_docname)
 
 	if not response:
 		frappe.logger().warning("DigiTax API returned empty response")
