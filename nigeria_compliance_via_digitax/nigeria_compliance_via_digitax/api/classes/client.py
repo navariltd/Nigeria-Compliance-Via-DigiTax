@@ -23,8 +23,7 @@ class DigitaxClient:
 		"""
 		self.company = company or self._get_default_company()
 		self.settings = self._get_settings()
-		self.environment = self._get_environment()
-		self.base_url = self.environment.base_url
+		self.base_url = self.settings.base_url
 		self.api_key = self._get_api_key()
 		self.headers = self._build_auth_headers()
 		self.timeout = 20
@@ -45,34 +44,14 @@ class DigitaxClient:
 			)
 		return frappe.get_doc("FIRS Settings", {"company": self.company})
 
-	def _get_environment(self):
-		"""Fetch the DigiTax environment settings"""
-		environment_name = self.settings.environment
-
-		if not environment_name:
-			frappe.throw(
-				_("No environment configured in FIRS Settings for {0}").format(
-					self.company
-				),
-				title=_("Configuration Error"),
-			)
-
-		if not frappe.db.exists("DigiTax Environment", environment_name):
-			frappe.throw(
-				_("DigiTax Environment '{0}' not found").format(environment_name),
-				title=_("Configuration Error"),
-			)
-
-		return frappe.get_doc("DigiTax Environment", environment_name)
-
 	def _get_api_key(self) -> str:
-		"""Get the API key from the environment document"""
-		api_key = self.environment.get_password(fieldname="api_key")
+		"""Get the API key from the FIRS Settings document"""
+		api_key = self.settings.get_password(fieldname="api_key")
 
 		if not api_key:
 			frappe.throw(
-				_("API Key not configured for environment {0}").format(
-					self.environment.name
+				_("API Key not configured for settings {0}").format(
+					self.settings.name
 				),
 				title=_("Configuration Error"),
 			)
