@@ -159,23 +159,11 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"nigeria_compliance_via_digitax.tasks.all"
-# 	],
-# 	"daily": [
-# 		"nigeria_compliance_via_digitax.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"nigeria_compliance_via_digitax.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"nigeria_compliance_via_digitax.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"nigeria_compliance_via_digitax.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+    "daily": [
+        "nigeria_compliance_via_digitax.tasks.submit_pending_sales_invoices_to_digitax"
+    ]
+}
 
 # Testing
 # -------

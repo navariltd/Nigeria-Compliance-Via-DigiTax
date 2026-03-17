@@ -1,6 +1,7 @@
 import frappe
 import json
 import requests
+from datetime import date, datetime
 from typing import Dict, Any, Optional
 from frappe import _
 
@@ -50,9 +51,7 @@ class DigitaxClient:
 
 		if not api_key:
 			frappe.throw(
-				_("API Key not configured for settings {0}").format(
-					self.settings.name
-				),
+				_("API Key not configured for settings {0}").format(self.settings.name),
 				title=_("Configuration Error"),
 			)
 
@@ -83,6 +82,19 @@ class DigitaxClient:
 	def _validate_sales_tracking_permission(self):
 		if not self.settings.allow_firs_tracking_sales:
 			raise DigitaxAPIException("Sales Tracking not allowed via settings")
+
+	def _json_default(self, value):
+		"""Serialize Python objects that the standard JSON encoder cannot handle."""
+		if isinstance(value, (date, datetime)):
+			return value.isoformat()
+
+		raise TypeError(
+			f"Object of type {type(value).__name__} is not JSON serializable"
+		)
+
+	def _dumps_json(self, data: Any) -> str:
+		"""Dump JSON using app-safe serialization for dates and datetimes."""
+		return json.dumps(data, indent=2, default=self._json_default)
 
 	def post(
 		self,
@@ -121,19 +133,20 @@ class DigitaxClient:
 			)
 
 			frappe.logger().info(f"DigiTax API Request: POST {url}")
-			frappe.logger().debug(f"Request data: {json.dumps(data, indent=2)}")
+			frappe.logger().debug(f"Request data: {self._dumps_json(data)}")
 
 			response = requests.post(
-				url, headers=self.headers, data=json.dumps(data), timeout=self.timeout
+				url,
+				headers=self.headers,
+				data=self._dumps_json(data),
+				timeout=self.timeout,
 			)
 
 			response.raise_for_status()
 			response_data = response.json()
 
 			frappe.logger().info(f"DigiTax API Response: {response.status_code}")
-			frappe.logger().debug(
-				f"Response data: {json.dumps(response_data, indent=2)}"
-			)
+			frappe.logger().debug(f"Response data: {self._dumps_json(response_data)}")
 
 			# Update Integration Request with successful response
 			self._update_integration_request(
@@ -200,19 +213,20 @@ class DigitaxClient:
 			)
 
 			frappe.logger().info(f"DigiTax API Request: PUT {url}")
-			frappe.logger().debug(f"Request data: {json.dumps(data, indent=2)}")
+			frappe.logger().debug(f"Request data: {self._dumps_json(data)}")
 
 			response = requests.put(
-				url, headers=self.headers, data=json.dumps(data), timeout=self.timeout
+				url,
+				headers=self.headers,
+				data=self._dumps_json(data),
+				timeout=self.timeout,
 			)
 
 			response.raise_for_status()
 			response_data = response.json()
 
 			frappe.logger().info(f"DigiTax API Response: {response.status_code}")
-			frappe.logger().debug(
-				f"Response data: {json.dumps(response_data, indent=2)}"
-			)
+			frappe.logger().debug(f"Response data: {self._dumps_json(response_data)}")
 
 			# Update Integration Request with successful response
 			self._update_integration_request(
@@ -278,9 +292,7 @@ class DigitaxClient:
 			response_data = response.json()
 
 			frappe.logger().info(f"DigiTax API Response: {response.status_code}")
-			frappe.logger().debug(
-				f"Response data: {json.dumps(response_data, indent=2)}"
-			)
+			frappe.logger().debug(f"Response data: {self._dumps_json(response_data)}")
 
 			# Update Integration Request with successful response
 			self._update_integration_request(
@@ -325,7 +337,7 @@ class DigitaxClient:
 					"request_headers": json.dumps(
 						self._sanitize_headers(self.headers), indent=2
 					),
-					"data": json.dumps(request_data, indent=2),
+					"data": self._dumps_json(request_data),
 					"reference_doctype": reference_doctype,
 					"reference_docname": reference_docname,
 					"status": "Queued",
@@ -354,7 +366,7 @@ class DigitaxClient:
 			integration_request.status = status
 
 			if response_data:
-				integration_request.output = json.dumps(response_data, indent=2)
+				integration_request.output = self._dumps_json(response_data)
 
 			if error:
 				integration_request.error = str(error)
