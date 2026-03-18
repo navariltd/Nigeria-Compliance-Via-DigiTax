@@ -78,6 +78,69 @@ def submit_sales_invoice(doc, method: Optional[str] = None) -> None:
         _handle_unexpected_error(doc, e)
 
 
+def sync_paid_invoice_payment_status(doc, method: Optional[str] = None) -> None:
+    """
+    Sync payment status to PAID in DigiTax for invoices that are fully paid on submit.
+
+    This primarily covers POS flows where the invoice is submitted at checkout and
+    no later Payment Entry/Journal Entry hook is expected to update DigiTax.
+
+    Args:
+        doc: The submitted Sales Invoice document
+        method: Hook method name (optional, not used)
+    """
+    if doc.docstatus != 1:
+        return
+
+    if not doc.get("is_pos"):
+        return
+
+    if not doc.get("nc_invoice_id"):
+        return
+
+    if doc.get("nc_payment_status") == "PAID":
+        return
+
+    if doc.outstanding_amount > 0:
+        return
+
+    try:
+        client = DigitaxClient(company=doc.company)
+        response = client.put(
+            endpoint="/invoices",
+            path_param=f"{doc.nc_invoice_id}/payment-status",
+            data={"payment_status": "PAID"},
+            reference_doctype="Sales Invoice",
+            reference_docname=doc.name,
+        )
+
+        if response:
+            _update_invoice_from_response(doc, response)
+            frappe.logger().info(
+                f"Payment status updated for Sales Invoice {doc.name} in DigiTax: PAID "
+                f"(fully paid on submit)"
+            )
+
+    except DigitaxAPIException as e:
+        frappe.log_error(
+            title="DigiTax Payment Status Sync Failed",
+            message=(
+                f"Sales Invoice: {doc.name}\n"
+                f"Payment Status: PAID\n"
+                f"Error: {str(e)}"
+            ),
+        )
+    except Exception as e:
+        frappe.log_error(
+            title="DigiTax Payment Status Sync Error",
+            message=(
+                f"Sales Invoice: {doc.name}\n"
+                f"Payment Status: PAID\n"
+                f"Error: {str(e)}\n{frappe.get_traceback()}"
+            ),
+        )
+
+
 def _update_invoice_from_response(doc, response: Dict[str, Any]) -> None:
     """
     Update Sales Invoice fields from DigiTax API response.
