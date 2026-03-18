@@ -156,14 +156,6 @@ def _update_invoice_from_response(doc, response: Dict[str, Any]) -> None:
         "validated_at": "nc_validated_at",
         "payment_status": "nc_payment_status",
         "invoice_reference_number": "nc_invoice_reference_number",
-        "tax_currency_code": "nc_tax_currency_code",
-        "line_extension_amount": "nc_line_extension_amount",
-        "charge_total_amount": "nc_charge_total_amount",
-        "allowance_total_amount": "nc_allowance_total_amount",
-        "tax_exclusive_amount": "nc_tax_exclusive_amount",
-        "tax_inclusive_amount": "nc_tax_inclusive_amount",
-        "payable_amount": "nc_payable_amount",
-        "tax_amount": "nc_tax_amount",
     }
 
     datetime_fields = ["signed_at", "validated_at"]
