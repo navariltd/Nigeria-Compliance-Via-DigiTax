@@ -147,6 +147,7 @@ doc_events = {
         "autoname": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.autoname_sales_invoice",
         "before_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.submit_sales_invoice",
         "on_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.sync_paid_invoice_payment_status",
+        "on_cancel": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.sync_cancelled_invoice_payment_status",
         "validate": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.set_firs_invoice_type",
     },
     "Payment Entry": {

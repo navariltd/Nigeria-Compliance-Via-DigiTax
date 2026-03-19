@@ -141,6 +141,59 @@ def sync_paid_invoice_payment_status(doc, method: Optional[str] = None) -> None:
         )
 
 
+def sync_cancelled_invoice_payment_status(doc, method: Optional[str] = None) -> None:
+    """
+    Sync payment status to REJECTED in DigiTax when a Sales Invoice is cancelled.
+
+    Args:
+        doc: The cancelled Sales Invoice document
+        method: Hook method name (optional, not used)
+    """
+    if doc.docstatus != 2:
+        return
+
+    if not doc.get("nc_invoice_id"):
+        return
+
+    if doc.get("nc_payment_status") == "REJECTED":
+        return
+
+    try:
+        client = DigitaxClient(company=doc.company)
+        response = client.put(
+            endpoint="/invoices",
+            path_param=f"{doc.nc_invoice_id}/payment-status",
+            data={"payment_status": "REJECTED"},
+            reference_doctype="Sales Invoice",
+            reference_docname=doc.name,
+        )
+
+        if response:
+            _update_invoice_from_response(doc, response)
+            frappe.logger().info(
+                f"Payment status updated for cancelled Sales Invoice {doc.name} in DigiTax: REJECTED"
+            )
+
+    except DigitaxAPIException as e:
+        frappe.log_error(
+            title="DigiTax Cancelled Invoice Status Sync Failed",
+            message=(
+                f"Sales Invoice: {doc.name}\n"
+                f"Payment Status: REJECTED\n"
+                f"Error: {str(e)}"
+            ),
+        )
+    except Exception as e:
+        frappe.log_error(
+            title="DigiTax Cancelled Invoice Status Sync Error",
+            message=(
+                f"Sales Invoice: {doc.name}\n"
+                f"Payment Status: REJECTED\n"
+                f"Error: {str(e)}\n{frappe.get_traceback()}"
+            ),
+        )
+
+
 def _update_invoice_from_response(doc, response: Dict[str, Any]) -> None:
     """
     Update Sales Invoice fields from DigiTax API response.
