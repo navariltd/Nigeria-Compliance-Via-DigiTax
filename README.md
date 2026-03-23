@@ -2,8 +2,10 @@
 
 Federal Inland Revenue Service (FIRS) integration via Digitax by Navari Ltd for Nigeria.
 
-DigiTax Docs: [https://ng.docs.digitax.tech/docs/getting-started](https://ng.docs.digitax.tech/docs/getting-started)
-DigiTax API Reference: [https://ng.docs.digitax.tech/reference/using-the-digitax-nigeria-api](https://ng.docs.digitax.tech/reference/using-the-digitax-nigeria-api)
+## Docs
+
+- DigiTax Docs: [https://ng.docs.digitax.tech/docs/getting-started](https://ng.docs.digitax.tech/docs/getting-started)
+- DigiTax API Reference: [https://ng.docs.digitax.tech/reference/using-the-digitax-nigeria-api](https://ng.docs.digitax.tech/reference/using-the-digitax-nigeria-api)
 
 ## Summary of Main Features
 
