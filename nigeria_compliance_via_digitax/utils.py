@@ -94,10 +94,16 @@ def _fetch_resources_from_api(client, endpoint, reference_doctype):
     Returns:
         list: List of resource dictionaries
     """
+    reference_docname = (
+        client.settings.name
+        if reference_doctype == "FIRS Settings" and getattr(client, "settings", None)
+        else client.company
+    )
+
     response = client.get(
         endpoint=endpoint,
         reference_doctype=reference_doctype,
-        reference_docname=client.company,
+        reference_docname=reference_docname,
     )
 
     if not response:
