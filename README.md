@@ -2,17 +2,60 @@
 
 Federal Inland Revenue Service (FIRS) integration via Digitax by Navari Ltd for Nigeria.
 
-## Features
+DigiTax Docs: [https://ng.docs.digitax.tech/docs/getting-started](https://ng.docs.digitax.tech/docs/getting-started)
+DigiTax API Reference: [https://ng.docs.digitax.tech/reference/using-the-digitax-nigeria-api](https://ng.docs.digitax.tech/reference/using-the-digitax-nigeria-api)
 
-### Automatic Data Loading on Installation
+## Summary of Main Features
 
-When the app is installed, it automatically loads:
+- **DigiTax integration for ERPNext/Frappe**
+  Connects ERPNext transactions to the DigiTax Nigeria API for FIRS-aligned invoicing and status synchronization.
 
-- **HS Codes** for Items from [hs-codes.json](https://raw.githubusercontent.com/namiri-tech/docs-rdme-ng/refs/heads/v1.0/assets/hs-codes.json)
-- **Service Codes** from [service-codes.csv](https://raw.githubusercontent.com/namiri-tech/docs-rdme-ng/refs/heads/v1.0/assets/service-codes.csv)
-- **Tax Categories** from [DigiTax API](https://api.digitax.tech/ng/v1/resources/tax-categories)
+- **Centralized FIRS settings and environment configuration**
+  Provides a dedicated **FIRS Settings** DocType for company-level setup, including API key, base URL, environment, and sales-tracking controls.
 
-These codes are required for DigiTax integration to generate unique item IDs for tax compliance.
+- **Reference code management from DigiTax**
+  Supports fetching and updating:
+  - Invoice Type Codes
+  - Tax Category Codes
+  - Country Codes
+  via FIRS Settings buttons and backend utility endpoints, with create/update/unchanged stats in responses.
+
+- **Automatic customer (party) sync**
+  On customer updates, the app syncs party data to DigiTax using Tax ID and address details, then stores:
+  - DigiTax party ID
+  - Active status from DigiTax
+  with validation and warning messages when required data is missing.
+
+- **Automatic item sync for FIRS-tracked items**
+  On item updates, items marked **Allow FIRS Tracking** are pushed to DigiTax and assigned a DigiTax item ID.
+  The sync uses FIRS tax/product categorization and protects against duplicate re-sync when an ID already exists.
+
+- **Sales Invoice lifecycle integration**
+  Adds invoice workflow automation:
+  - Custom autonaming format for Sales Invoices
+  - Validation of required DigiTax/FIRS fields before submission
+  - Submission to DigiTax on `before_submit` (standard invoice or credit note endpoint)
+  - Mapping DigiTax response fields back to Sales Invoice custom fields
+  - Automatic payment-status sync for POS-paid invoices and cancelled invoices
+
+- **Payment status synchronization across finance flows**
+  Updates DigiTax invoice payment status to `PAID` when invoices are cleared through:
+  - Payment Entry submission
+  - Journal Entry submission
+  - Payment Reconciliation (`extend_doctype_class` mixin)
+
+- **Scheduled retry for pending DigiTax submissions**
+  Includes a daily scheduler job that retries submitted Sales Invoices still missing DigiTax invoice IDs, with optional lookup by reference number and result logging.
+
+- **Custom field extensions for compliance tracking**
+  Ships fixtures adding DigiTax/FIRS fields on Customer, Item, Sales Invoice, and Sales Invoice Item to persist:
+  - DigiTax IDs
+  - FIRS tax categories
+  - Payment/signing/validation metadata
+  - Tracking flags used in compliance workflows
+
+- **Operational visibility and fault tolerance**
+  API calls are logged through Integration Request records and structured error logging; most sync failures warn users while preserving local document saves.
 
 ## Setup
 
