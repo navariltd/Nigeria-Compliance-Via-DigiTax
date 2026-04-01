@@ -1,25 +1,29 @@
 app_name = "nigeria_compliance_via_digitax"
-app_title = "Nigeria Compliance Via Digitax"
+app_title = "Nigeria Compliance"
 app_publisher = "Navari Limited"
-app_description = "Federal Inland Revenue Service (FIRS) integration via Digitax by Navari Ltd for Nigeria."
+app_description = "An ERPNext application for seamless integration with Nigeria's Federal Inland Revenue Service (FIRS) through the Digitax Nigeria API. This app automates tax compliance, e-invoicing, and regulatory reporting for Nigerian businesses."
 app_email = "solutions@navari.co.ke"
 app_license = "mit"
 
 # Apps
 # ------------------
 
-# required_apps = []
+required_apps = ["erpnext"]
 
 # Each item in the list will be shown as an app in the apps page
-# add_to_apps_screen = [
-# 	{
-# 		"name": "nigeria_compliance_via_digitax",
-# 		"logo": "/assets/nigeria_compliance_via_digitax/logo.png",
-# 		"title": "Nigeria Compliance Via Digitax",
-# 		"route": "/nigeria_compliance_via_digitax",
-# 		"has_permission": "nigeria_compliance_via_digitax.api.permission.has_app_permission"
-# 	}
-# ]
+add_to_apps_screen = [
+    {
+        "name": "nigeria_compliance_via_digitax",
+        "logo": "/assets/nigeria_compliance_via_digitax/assets/logo.png",
+        "title": "Nigeria Compliance Via Digitax",
+        "route": "/desk/nigeria-compliance",
+        "has_permission": "nigeria_compliance_via_digitax.permission.has_app_permission",
+    }
+]
+
+fixtures = [
+    {"doctype": "Custom Field", "filters": {"module": "Nigeria Compliance Via Digitax"}}
+]
 
 # Includes in <head>
 # ------------------
@@ -43,7 +47,7 @@ app_license = "mit"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {"Sales Invoice": "public/js/sales_invoice.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -86,7 +90,7 @@ app_license = "mit"
 # ------------
 
 # before_install = "nigeria_compliance_via_digitax.install.before_install"
-# after_install = "nigeria_compliance_via_digitax.install.after_install"
+after_install = "nigeria_compliance_via_digitax.install.after_install"
 
 # Uninstallation
 # ------------
@@ -132,34 +136,36 @@ app_license = "mit"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+    "Item": {
+        "on_update": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.item.get_digitax_item_code"
+    },
+    "Customer": {
+        "on_update": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.party.get_digitax_party_code"
+    },
+    "Sales Invoice": {
+        "autoname": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.autoname_sales_invoice",
+        "before_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.submit_sales_invoice",
+        "on_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.sync_paid_invoice_payment_status",
+        "on_cancel": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.sync_cancelled_invoice_payment_status",
+        "validate": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.set_firs_invoice_type",
+    },
+    "Payment Entry": {
+        "on_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.payment_entry.update_invoice_payment_status",
+    },
+    "Journal Entry": {
+        "on_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.journal_entry.update_invoice_payment_status",
+    },
+}
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"nigeria_compliance_via_digitax.tasks.all"
-# 	],
-# 	"daily": [
-# 		"nigeria_compliance_via_digitax.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"nigeria_compliance_via_digitax.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"nigeria_compliance_via_digitax.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"nigeria_compliance_via_digitax.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+    "daily": [
+        "nigeria_compliance_via_digitax.tasks.submit_pending_sales_invoices_to_digitax"
+    ]
+}
 
 # Testing
 # -------
@@ -170,9 +176,9 @@ app_license = "mit"
 # ------------------------------
 #
 # Specify custom mixins to extend the standard doctype controller.
-# extend_doctype_class = {
-# 	"Task": "nigeria_compliance_via_digitax.custom.task.CustomTaskMixin"
-# }
+extend_doctype_class = {
+    "Payment Reconciliation": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.payment_reconciliation.PaymentReconciliationMixin"
+}
 
 # Overriding Methods
 # ------------------------------
@@ -249,4 +255,3 @@ app_license = "mit"
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
-
