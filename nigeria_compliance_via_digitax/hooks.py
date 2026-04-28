@@ -11,15 +11,15 @@ app_license = "mit"
 required_apps = ["erpnext"]
 
 # Each item in the list will be shown as an app in the apps page
-add_to_apps_screen = [
-    {
-        "name": "nigeria_compliance_via_digitax",
-        "logo": "/assets/nigeria_compliance_via_digitax/assets/logo.png",
-        "title": "Nigeria Compliance Via Digitax",
-        "route": "/desk/nigeria-compliance",
-        "has_permission": "nigeria_compliance_via_digitax.permission.has_app_permission",
-    }
-]
+# add_to_apps_screen = [
+#     {
+#         "name": "nigeria_compliance_via_digitax",
+#         "logo": "/assets/nigeria_compliance_via_digitax/assets/logo.png",
+#         "title": "Nigeria Compliance Via Digitax",
+#         "route": "/desk/nigeria-compliance",
+#         "has_permission": "nigeria_compliance_via_digitax.permission.has_app_permission",
+#     }
+# ]
 
 fixtures = [
     {"doctype": "Custom Field", "filters": {"module": "Nigeria Compliance Via Digitax"}}
