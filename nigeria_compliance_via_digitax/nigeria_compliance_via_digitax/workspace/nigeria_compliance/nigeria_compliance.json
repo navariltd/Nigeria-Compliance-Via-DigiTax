@@ -1,0 +1,165 @@
+{
+ "app": "nigeria_compliance_via_digitax",
+ "charts": [],
+ "content": "[{\"id\":\"KuHSdbWXl6\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">DigiTax Integration</span>\",\"col\":12}},{\"id\":\"RIBHOiAeSt\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Integration Request\",\"col\":4}},{\"id\":\"BLE63ltCmM\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Error Log\",\"col\":5}},{\"id\":\"SDulTK9KH2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Qk3iMQ-RUV\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup & Masters\",\"col\":4}},{\"id\":\"KberMbkVa-\",\"type\":\"card\",\"data\":{\"card_name\":\"Codes and Types\",\"col\":4}},{\"id\":\"QtXodUbF9L\",\"type\":\"card\",\"data\":{\"card_name\":\"Categories\",\"col\":4}}]",
+ "creation": "2026-05-12 09:02:32.726721",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "hide_custom": 0,
+ "icon": "calculator",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Nigeria Compliance",
+ "link_type": "DocType",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Setup & Masters",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "FIRS Settings",
+   "link_count": 0,
+   "link_to": "FIRS Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item",
+   "link_count": 0,
+   "link_to": "Item",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Customer",
+   "link_count": 0,
+   "link_to": "Customer",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Invoice",
+   "link_count": 0,
+   "link_to": "Sales Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Codes and Types",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "FIRS Country Codes",
+   "link_count": 0,
+   "link_to": "FIRS Country Codes",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "FIRS HS Code",
+   "link_count": 0,
+   "link_to": "FIRS HS Code",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "FIRS Invoice Type",
+   "link_count": 0,
+   "link_to": "FIRS Invoice Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Categories",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "FIRS Product Category",
+   "link_count": 0,
+   "link_to": "FIRS Product Category",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "FIRS Tax Category",
+   "link_count": 0,
+   "link_to": "FIRS Tax Category",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-05-12 10:11:13.876783",
+ "modified_by": "Administrator",
+ "module": "Nigeria Compliance Via Digitax",
+ "name": "Nigeria Compliance",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 0.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Error Log",
+   "link_to": "Error Log",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Integration Request",
+   "link_to": "Integration Request",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Nigeria Compliance",
+ "type": "Workspace"
+}
