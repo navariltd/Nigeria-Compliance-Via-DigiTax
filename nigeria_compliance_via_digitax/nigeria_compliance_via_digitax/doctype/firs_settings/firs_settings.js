@@ -3,21 +3,20 @@
 
 frappe.ui.form.on("FIRS Settings", {
 	refresh(frm) {
-		// Set up button click handlers
-		frm.trigger("setup_fetch_buttons");
-	},
+		const fetchActions = [
+			["Invoice Type Codes", "fetch_invoice_type_codes"],
+			["Tax Category Codes", "fetch_tax_category_codes"],
+			["Country Codes", "fetch_country_codes"],
+		];
 
-	setup_fetch_buttons(frm) {
-		frm.fields_dict.fetch_invoice_type_codes.$input.on("click", () => {
-			frm.trigger("fetch_invoice_type_codes");
-		});
-
-		frm.fields_dict.fetch_tax_category_codes.$input.on("click", () => {
-			frm.trigger("fetch_tax_category_codes");
-		});
-
-		frm.fields_dict.fetch_country_codes.$input.on("click", () => {
-			frm.trigger("fetch_country_codes");
+		fetchActions.forEach(([label, handler]) => {
+			frm.add_custom_button(
+				__(label),
+				() => {
+					frm.trigger(handler);
+				},
+				__("Actions"),
+			);
 		});
 	},
 
