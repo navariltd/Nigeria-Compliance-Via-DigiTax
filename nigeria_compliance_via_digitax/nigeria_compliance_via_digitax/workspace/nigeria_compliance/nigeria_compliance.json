@@ -28,7 +28,7 @@
    "is_query_report": 0,
    "label": "FIRS Settings",
    "link_count": 0,
-   "link_to": "FIRS Settings",
+   "link_to": "NRS Settings",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -75,9 +75,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "FIRS Country Codes",
+   "label": "NRS Country Codes",
    "link_count": 0,
-   "link_to": "FIRS Country Codes",
+   "link_to": "NRS Country Codes",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -85,9 +85,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "FIRS HS Code",
+   "label": "NRS HS Code",
    "link_count": 0,
-   "link_to": "FIRS HS Code",
+   "link_to": "NRS HS Code",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -95,9 +95,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "FIRS Invoice Type",
+   "label": "NRS Invoice Type",
    "link_count": 0,
-   "link_to": "FIRS Invoice Type",
+   "link_to": "NRS Invoice Type",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -114,9 +114,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "FIRS Product Category",
+   "label": "NRS Product Category",
    "link_count": 0,
-   "link_to": "FIRS Product Category",
+   "link_to": "NRS Product Category",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -124,15 +124,15 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "FIRS Tax Category",
+   "label": "NRS Tax Category",
    "link_count": 0,
-   "link_to": "FIRS Tax Category",
+   "link_to": "NRS Tax Category",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2026-05-12 10:11:13.876783",
+ "modified": "2026-06-02 12:09:26.115739",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "Nigeria Compliance",
