@@ -23,7 +23,7 @@ frappe.ui.form.on("NRS Settings", {
 	fetch_invoice_type_codes(frm) {
 		frappe.confirm(
 			__(
-				"This will fetch Invoice Type Codes from DigiTax API and create/update FIRS Invoice Type documents. Continue?",
+				"This will fetch Invoice Type Codes from DigiTax API and create/update NRS Invoice Type documents. Continue?",
 			),
 			() => {
 				frappe.call({
@@ -84,7 +84,7 @@ frappe.ui.form.on("NRS Settings", {
 	fetch_tax_category_codes(frm) {
 		frappe.confirm(
 			__(
-				"This will fetch Tax Category Codes from DigiTax API and create/update FIRS Tax Category documents. Continue?",
+				"This will fetch Tax Category Codes from DigiTax API and create/update NRS Tax Category documents. Continue?",
 			),
 			() => {
 				frappe.call({
@@ -145,7 +145,7 @@ frappe.ui.form.on("NRS Settings", {
 	fetch_country_codes(frm) {
 		frappe.confirm(
 			__(
-				"This will fetch Country Codes from DigiTax API and create/update FIRS Country Codes documents. Continue?",
+				"This will fetch Country Codes from DigiTax API and create/update NRS Country Codes documents. Continue?",
 			),
 			() => {
 				frappe.call({

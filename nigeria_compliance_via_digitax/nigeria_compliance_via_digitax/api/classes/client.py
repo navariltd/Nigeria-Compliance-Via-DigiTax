@@ -37,16 +37,16 @@ class DigitaxClient:
 		return company
 
 	def _get_settings(self):
-		"""Fetch FIRS settings for the company"""
-		if not frappe.db.exists("FIRS Settings", {"company": self.company}):
+		"""Fetch NRS settings for the company"""
+		if not frappe.db.exists("NRS Settings", {"company": self.company}):
 			frappe.throw(
-				_("FIRS Settings not found for company {0}").format(self.company),
+				_("NRS Settings not found for company {0}").format(self.company),
 				title=_("Configuration Error"),
 			)
-		return frappe.get_doc("FIRS Settings", {"company": self.company})
+		return frappe.get_doc("NRS Settings", {"company": self.company})
 
 	def _get_api_key(self) -> str:
-		"""Get the API key from the FIRS Settings document"""
+		"""Get the API key from the NRS Settings document"""
 		api_key = self.settings.get_password(fieldname="api_key")
 
 		if not api_key:
@@ -80,7 +80,7 @@ class DigitaxClient:
 			return error.response.text or str(error)
 
 	def _validate_sales_tracking_permission(self):
-		if not self.settings.allow_firs_tracking_sales:
+		if not self.settings.allow_nrs_tracking_sales:
 			raise DigitaxAPIException("Sales Tracking not allowed via settings")
 
 	def _json_default(self, value):

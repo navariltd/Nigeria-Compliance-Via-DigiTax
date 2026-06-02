@@ -10,7 +10,7 @@
   "company",
   "column_break_dgvz",
   "environment",
-  "allow_firs_tracking_sales",
+  "allow_nrs_tracking_sales",
   "digitax_environment_section",
   "api_key",
   "column_break_mjda",
@@ -35,12 +35,6 @@
   {
    "fieldname": "column_break_dgvz",
    "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "allow_firs_tracking_sales",
-   "fieldtype": "Check",
-   "label": "Allow FIRS To Track Sales"
   },
   {
    "fieldname": "environment",
@@ -68,12 +62,18 @@
    "fieldname": "base_url",
    "fieldtype": "Data",
    "label": "Base URL"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_nrs_tracking_sales",
+   "fieldtype": "Check",
+   "label": "Allow NRS To Track Sales"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-19 15:38:16.815857",
+ "modified": "2026-06-02 12:11:56.115118",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "NRS Settings",
