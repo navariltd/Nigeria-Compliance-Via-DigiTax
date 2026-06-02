@@ -257,7 +257,7 @@ def _show_sync_warning_message(message: str) -> None:
 
 def _get_country_alpha3_code(country_name: str) -> str:
 	"""
-	Get the ISO Alpha-3 country code from FIRS Country Codes.
+	Get the ISO Alpha-3 country code from NRS Country Codes.
 
 	Args:
 		country_name: Name of the country
@@ -269,7 +269,7 @@ def _get_country_alpha3_code(country_name: str) -> str:
 		return ""
 
 	code = frappe.db.get_value(
-		"FIRS Country Codes", {"country": country_name}, "alpha3"
+		"NRS Country Codes", {"country": country_name}, "alpha3"
 	)
 
 	if not code:

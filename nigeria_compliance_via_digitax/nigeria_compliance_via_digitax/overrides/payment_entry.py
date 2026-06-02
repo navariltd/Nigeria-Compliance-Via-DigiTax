@@ -16,7 +16,7 @@ def update_invoice_payment_status(doc, method: Optional[str] = None) -> None:
 	Update payment status in DigiTax when a Payment Entry is submitted.
 
 	This function is called via hooks on Payment Entry submission.
-	It checks if the payment is against a Sales Invoice tracked by FIRS,
+	It checks if the payment is against a Sales Invoice tracked by NRS,
 	then updates the payment status in DigiTax to "PAID" if fully paid,
 	or "REJECTED" if there is still an outstanding amount.
 
@@ -115,5 +115,5 @@ def _process_invoice_payment_update(invoice_name: str, payment_doc) -> None:
 
 def _is_invoice_fully_paid(invoice):
 	invoice.reload()
-	
+
 	return invoice.outstanding_amount <= 0

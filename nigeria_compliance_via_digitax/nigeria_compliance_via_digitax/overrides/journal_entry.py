@@ -17,7 +17,7 @@ def update_invoice_payment_status(doc, method: Optional[str] = None) -> None:
 
     This function is called via hooks on Journal Entry submission.
     It inspects each account row for references to Sales Invoices tracked by
-    FIRS, then updates the payment status in DigiTax to "PAID" for any
+    NRS, then updates the payment status in DigiTax to "PAID" for any
     invoice whose outstanding amount has reached zero.
 
     Args:
