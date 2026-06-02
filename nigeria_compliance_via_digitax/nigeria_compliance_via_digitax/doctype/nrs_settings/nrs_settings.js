@@ -1,7 +1,7 @@
 // Copyright (c) 2026, Navari Limited and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("FIRS Settings", {
+frappe.ui.form.on("NRS Settings", {
 	refresh(frm) {
 		const fetchActions = [
 			["Invoice Type Codes", "fetch_invoice_type_codes"],

@@ -11,7 +11,7 @@ from nigeria_compliance_via_digitax.utils import (
 )
 
 
-class FIRSSettings(Document):
+class NRSSettings(Document):
     def after_insert(self):
         # Fetch reference codes when FIRS Settings is created for the first time
         fetch_digitax_reference_codes(self)
