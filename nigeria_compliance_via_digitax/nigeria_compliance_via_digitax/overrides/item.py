@@ -15,7 +15,7 @@ def get_digitax_item_code(doc, method: Optional[str] = None) -> None:
         doc: Item document
         method: Method name (on_update, after_insert, etc.)
     """
-    if not doc.allow_firs_tracking:
+    if not doc.allow_nrs_tracking:
         return
 
     if doc.digitax_id:
@@ -63,8 +63,8 @@ def _validate_item_data(doc) -> None:
         frappe.ValidationError: If required fields are missing
     """
     required_fields = {
-        "firs_tax_category": "FIRS Tax Category",
-        "firs_product_category": "FIRS Product Category",
+        "nrs_tax_category": "NRS Tax Category",
+        "nrs_product_category": "NRS Product Category",
     }
 
     missing_fields = []
@@ -91,12 +91,12 @@ def _build_item_request_data(doc) -> dict:
     Returns:
         Dictionary containing the request data
     """
-    tax_category_code = get_tax_category_code(doc.firs_tax_category)
-    hsn_code, is_service = get_hsn_code(doc.firs_product_category)
+    tax_category_code = get_tax_category_code(doc.nrs_tax_category)
+    hsn_code, is_service = get_hsn_code(doc.nrs_product_category)
 
     return {
         "tax_category_code": tax_category_code,
-        "product_category": doc.firs_product_category,
+        "product_category": doc.nrs_product_category,
         "hsn_code": hsn_code,
         "item_name": doc.item_name or doc.name,
         "description": _get_item_description(doc),
@@ -153,12 +153,12 @@ def _update_item_with_digitax_id(doc, api_response: dict) -> None:
     )
 
 
-def get_tax_category_code(firs_tax_category: str) -> str:
+def get_tax_category_code(nrs_tax_category: str) -> str:
     """
-    Get tax category code from FIRS Tax Category
+    Get tax category code from NRS Tax Category
 
     Args:
-        firs_tax_category: Name of FIRS Tax Category
+        nrs_tax_category: Name of NRS Tax Category
 
     Returns:
         Tax category code
@@ -166,25 +166,25 @@ def get_tax_category_code(firs_tax_category: str) -> str:
     Raises:
         frappe.DoesNotExistError: If tax category doesn't exist
     """
-    if not firs_tax_category:
-        frappe.throw(_("FIRS Tax Category is required"))
+    if not nrs_tax_category:
+        frappe.throw(_("NRS Tax Category is required"))
 
-    tax_code = frappe.db.get_value("FIRS Tax Category", firs_tax_category, "tax_code")
+    tax_code = frappe.db.get_value("NRS Tax Category", nrs_tax_category, "tax_code")
 
     if not tax_code:
         frappe.throw(
-            _("Tax code not found for FIRS Tax Category: {0}").format(firs_tax_category)
+            _("Tax code not found for NRS Tax Category: {0}").format(nrs_tax_category)
         )
 
     return tax_code
 
 
-def get_hsn_code(firs_product_category: str) -> Tuple[str, int]:
+def get_hsn_code(nrs_product_category: str) -> Tuple[str, int]:
     """
-    Get HSN code and service flag from FIRS Product Category
+    Get HSN code and service flag from NRS Product Category
 
     Args:
-        firs_product_category: Name of FIRS Product Category
+        nrs_product_category: Name of NRS Product Category
 
     Returns:
         Tuple of (hs_code, is_service)
@@ -192,27 +192,27 @@ def get_hsn_code(firs_product_category: str) -> Tuple[str, int]:
     Raises:
         frappe.DoesNotExistError: If product category doesn't exist
     """
-    if not firs_product_category:
-        frappe.throw(_("FIRS Product Category is required"))
+    if not nrs_product_category:
+        frappe.throw(_("NRS Product Category is required"))
 
     result = frappe.db.get_value(
-        "FIRS Product Category",
-        firs_product_category,
+        "NRS Product Category",
+        nrs_product_category,
         ["hs_code", "is_service"],
         as_dict=False,
     )
 
     if not result:
         frappe.throw(
-            _("FIRS Product Category not found: {0}").format(firs_product_category)
+            _("NRS Product Category not found: {0}").format(nrs_product_category)
         )
 
     hs_code, is_service = result
 
     if not hs_code:
         frappe.throw(
-            _("HS Code not configured for FIRS Product Category: {0}").format(
-                firs_product_category
+            _("HS Code not configured for NRS Product Category: {0}").format(
+                nrs_product_category
             )
         )
 

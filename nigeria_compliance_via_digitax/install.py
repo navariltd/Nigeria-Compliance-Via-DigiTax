@@ -3,8 +3,6 @@
 
 import csv
 import frappe
-import json
-import os
 import requests
 
 from frappe import _
@@ -29,13 +27,13 @@ def load_hs_codes():
     Load and populate HS (Harmonized System) codes from a remote JSON source.
 
     This function fetches HS codes from Namiri-Tech GitHub repository and imports them
-    into the FIRS HS Code doctype. It skips the import if HS codes for
+    into the NRS HS Code doctype. It skips the import if HS codes for
     the "Item" category already exist in the database.
 
     The function performs the following steps:
     1. Sends a GET request to fetch HS codes from the remote URL
     2. Checks if Item HS codes already exist in the database
-    3. Iterates through each HS code entry and creates new FIRS HS Code documents
+    3. Iterates through each HS code entry and creates new NRS HS Code documents
     4. Skips entries that already exist or lack required fields
     5. Commits all changes to the database
 
@@ -49,7 +47,7 @@ def load_hs_codes():
 
     Side Effects:
             - Logs info and error messages to the Frappe logger
-            - Creates new "FIRS HS Code" documents in the database
+            - Creates new "NRS HS Code" documents in the database
             - Commits database transactions
             - May display error messages to the user via frappe.throw()
 
@@ -67,7 +65,7 @@ def load_hs_codes():
 
         hs_codes_data = response.json()
 
-        existing_count = frappe.db.count("FIRS HS Code", {"category": "Item"})
+        existing_count = frappe.db.count("NRS HS Code", {"category": "Item"})
         if existing_count > 0:
             frappe.logger().info(
                 f"Found {existing_count} existing Item HS codes. Skipping import."
@@ -85,11 +83,11 @@ def load_hs_codes():
                     continue
 
                 if not frappe.db.exists(
-                    "FIRS HS Code", {"hscode": hscode, "category": "Item"}
+                    "NRS HS Code", {"hscode": hscode, "category": "Item"}
                 ):
                     doc = frappe.get_doc(
                         {
-                            "doctype": "FIRS HS Code",
+                            "doctype": "NRS HS Code",
                             "category": "Item",
                             "hscode": hscode,
                             "description": description,
@@ -118,16 +116,16 @@ def load_hs_codes():
 
 def load_service_codes():
     """
-    Load service codes from a remote CSV file and populate the FIRS HS Code database.
+    Load service codes from a remote CSV file and populate the NRS HS Code database.
 
-    This function fetches service codes from Namiri-Tech GitHub repository and creates FIRS HS Code
+    This function fetches service codes from Namiri-Tech GitHub repository and creates NRS HS Code
     records in the database. It skips the import if service codes already exist to prevent
     duplicates.
 
     Process:
     1. Fetches service codes from a remote CSV URL with a 30-second timeout
     2. Checks if service codes already exist in the database
-    3. Iterates through CSV rows and creates new FIRS HS Code documents for each unique code
+    3. Iterates through CSV rows and creates new NRS HS Code documents for each unique code
     4. Logs errors for individual records without stopping the entire process
     5. Commits all changes to the database upon completion
 
@@ -139,7 +137,7 @@ def load_service_codes():
             None
 
     Side Effects:
-            - Creates new FIRS HS Code records in the database
+            - Creates new NRS HS Code records in the database
             - Logs info and error messages using frappe.logger()
             - Commits database transactions
     """
@@ -153,7 +151,7 @@ def load_service_codes():
         csv_data = StringIO(response.text)
         csv_reader = csv.DictReader(csv_data)
 
-        existing_count = frappe.db.count("FIRS HS Code", {"category": "Service"})
+        existing_count = frappe.db.count("NRS HS Code", {"category": "Service"})
         if existing_count > 0:
             frappe.logger().info(
                 f"Found {existing_count} existing Service codes. Skipping import."
@@ -171,11 +169,11 @@ def load_service_codes():
                     continue
 
                 if not frappe.db.exists(
-                    "FIRS HS Code", {"hscode": code, "category": "Service"}
+                    "NRS HS Code", {"hscode": code, "category": "Service"}
                 ):
                     doc = frappe.get_doc(
                         {
-                            "doctype": "FIRS HS Code",
+                            "doctype": "NRS HS Code",
                             "category": "Service",
                             "hscode": code,
                             "description": description,
@@ -207,15 +205,15 @@ def load_service_codes():
 def reload_digitax_category_codes():
     frappe.logger().info("Reloading Digitax category codes...")
 
-    frappe.db.delete("FIRS HS Code")
+    frappe.db.delete("NRS HS Code")
 
-    # Only delete FIRS Tax Categories if the doctype exists
-    if frappe.db.exists("DocType", "FIRS Tax Category"):
-        frappe.db.delete("FIRS Tax Category")
+    # Only delete NRS Tax Categories if the doctype exists
+    if frappe.db.exists("DocType", "NRS Tax Category"):
+        frappe.db.delete("NRS Tax Category")
 
-    # Only delete FIRS Country Codes if the doctype exists
-    if frappe.db.exists("DocType", "FIRS Country Codes"):
-        frappe.db.delete("FIRS Country Codes")
+    # Only delete NRS Country Codes if the doctype exists
+    if frappe.db.exists("DocType", "NRS Country Codes"):
+        frappe.db.delete("NRS Country Codes")
 
     frappe.db.commit()  # nosemgrep
 

@@ -1,7 +1,7 @@
 app_name = "nigeria_compliance_via_digitax"
 app_title = "Nigeria Compliance"
 app_publisher = "Navari Limited"
-app_description = "An ERPNext application for seamless integration with Nigeria's Federal Inland Revenue Service (FIRS) through the Digitax Nigeria API. This app automates tax compliance, e-invoicing, and regulatory reporting for Nigerian businesses."
+app_description = "An ERPNext application for seamless integration with Nigeria Revenue Service (NRS) through the Digitax Nigeria API. This app automates tax compliance, e-invoicing, and regulatory reporting for Nigerian businesses."
 app_email = "solutions@navari.co.ke"
 app_license = "mit"
 
@@ -148,7 +148,7 @@ doc_events = {
         "before_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.submit_sales_invoice",
         "on_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.sync_paid_invoice_payment_status",
         "on_cancel": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.sync_cancelled_invoice_payment_status",
-        "validate": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.set_firs_invoice_type",
+        "validate": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.sales_invoice.set_nrs_invoice_type",
     },
     "Payment Entry": {
         "on_submit": "nigeria_compliance_via_digitax.nigeria_compliance_via_digitax.overrides.payment_entry.update_invoice_payment_status",

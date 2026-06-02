@@ -1,40 +1,39 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:country",
- "creation": "2026-02-20 21:13:08.741544",
+ "autoname": "field:value",
+ "creation": "2026-03-01 23:14:55.897474",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "country",
-  "alpha2",
-  "alpha3"
+  "code",
+  "value"
  ],
  "fields": [
   {
-   "fieldname": "country",
+   "fieldname": "code",
    "fieldtype": "Data",
-   "label": "Country",
+   "in_list_view": 1,
+   "label": "Code",
+   "reqd": 1,
    "unique": 1
   },
   {
-   "fieldname": "alpha2",
+   "fieldname": "value",
    "fieldtype": "Data",
-   "label": "Code 1"
-  },
-  {
-   "fieldname": "alpha3",
-   "fieldtype": "Data",
-   "label": "Code 2"
+   "in_list_view": 1,
+   "label": "Value",
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-20 21:16:00.735437",
+ "modified": "2026-03-01 23:20:56.915294",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
- "name": "FIRS Country Codes",
+ "name": "NRS Invoice Type",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

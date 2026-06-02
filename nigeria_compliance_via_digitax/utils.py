@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 """
-Utility functions for managing FIRS HS Codes, Service Codes, and Tax Categories.
+Utility functions for managing NRS HS Codes, Service Codes, and Tax Categories.
 These can be called from the Frappe console or programmatically.
 """
 
@@ -29,7 +29,7 @@ def reload_codes():
     Usage from Frappe console:
                 frappe.call("nigeria_compliance_via_digitax.utils.reload_codes")
     """
-    if not frappe.has_permission("FIRS HS Code", "write"):
+    if not frappe.has_permission("NRS HS Code", "write"):
         frappe.throw(_("You don't have permission to reload Digitax codes."))
 
     reload_digitax_category_codes()
@@ -45,13 +45,13 @@ def get_codes_stats():
                 dict: Statistics including counts of Items, Services, and Tax Categories
     """
     tax_category_count = 0
-    if frappe.db.exists("DocType", "Tax Category"):
-        tax_category_count = frappe.db.count("Tax Category")
+    if frappe.db.exists("DocType", "NRS Tax Category"):
+        tax_category_count = frappe.db.count("NRS Tax Category")
 
     return {
-        "total_codes": frappe.db.count("FIRS HS Code"),
-        "item_codes": frappe.db.count("FIRS HS Code", {"category": "Item"}),
-        "service_codes": frappe.db.count("FIRS HS Code", {"category": "Service"}),
+        "total_codes": frappe.db.count("NRS HS Code"),
+        "item_codes": frappe.db.count("NRS HS Code", {"category": "Item"}),
+        "service_codes": frappe.db.count("NRS HS Code", {"category": "Service"}),
         "tax_categories": tax_category_count,
     }
 
@@ -96,7 +96,7 @@ def _fetch_resources_from_api(client, endpoint, reference_doctype):
     """
     reference_docname = (
         client.settings.name
-        if reference_doctype == "FIRS Settings" and getattr(client, "settings", None)
+        if reference_doctype == "NRS Settings" and getattr(client, "settings", None)
         else client.company
     )
 
@@ -189,9 +189,9 @@ def _get_unique_identifier(doctype, doc_data):
     """
     # Map doctypes to their unique identifier fields
     unique_fields = {
-        "FIRS Invoice Type": "code",
-        "FIRS Tax Category": "category_name",
-        "FIRS Country Codes": "country",
+        "NRS Invoice Type": "code",
+        "NRS Tax Category": "category_name",
+        "NRS Country Codes": "country",
     }
 
     field_name = unique_fields.get(doctype, "name")
@@ -261,7 +261,7 @@ def _build_result_message(stats, resource_name):
 
 def _map_invoice_type(api_data):
     """
-    Map API response to FIRS Invoice Type document fields.
+    Map API response to NRS Invoice Type document fields.
 
     Args:
         api_data: Dictionary from API response
@@ -275,13 +275,13 @@ def _map_invoice_type(api_data):
     if not code or not value:
         return None
 
-    return {"doctype": "FIRS Invoice Type", "code": code, "value": value}
+    return {"doctype": "NRS Invoice Type", "code": code, "value": value}
 
 
 @frappe.whitelist()
 def fetch_invoice_type_codes(company: Union[str, None] = None):
     """
-    Fetch Invoice Type Codes from DigiTax API and create FIRS Invoice Type documents.
+    Fetch Invoice Type Codes from DigiTax API and create NRS Invoice Type documents.
 
     Args:
         company: Company name (optional, defaults to user's default company)
@@ -292,10 +292,10 @@ def fetch_invoice_type_codes(company: Union[str, None] = None):
     try:
         client = DigitaxClient(company=company)
         resources = _fetch_resources_from_api(
-            client, "resources/invoice-types", "FIRS Settings"
+            client, "resources/invoice-types", "NRS Settings"
         )
         stats, errors = _process_resources(
-            resources, "FIRS Invoice Type", _map_invoice_type
+            resources, "NRS Invoice Type", _map_invoice_type
         )
 
         frappe.db.commit()
@@ -324,7 +324,7 @@ def fetch_invoice_type_codes(company: Union[str, None] = None):
 
 def _map_tax_category(api_data):
     """
-    Map API response to FIRS Tax Category document fields.
+    Map API response to NRS Tax Category document fields.
 
     API Response fields:
         - code -> tax_code
@@ -347,7 +347,7 @@ def _map_tax_category(api_data):
         return None
 
     return {
-        "doctype": "FIRS Tax Category",
+        "doctype": "NRS Tax Category",
         "tax_code": code,
         "category_name": name,
         "tax_rate": tax_rate,
@@ -358,7 +358,7 @@ def _map_tax_category(api_data):
 @frappe.whitelist()
 def fetch_tax_category_codes(company: Union[str, None] = None):
     """
-    Fetch Tax Category Codes from DigiTax API and create FIRS Tax Category documents.
+    Fetch Tax Category Codes from DigiTax API and create NRS Tax Category documents.
 
     Args:
         company: Company name (optional, defaults to user's default company)
@@ -369,10 +369,10 @@ def fetch_tax_category_codes(company: Union[str, None] = None):
     try:
         client = DigitaxClient(company=company)
         resources = _fetch_resources_from_api(
-            client, "resources/tax-categories", "FIRS Settings"
+            client, "resources/tax-categories", "NRS Settings"
         )
         stats, errors = _process_resources(
-            resources, "FIRS Tax Category", _map_tax_category
+            resources, "NRS Tax Category", _map_tax_category
         )
 
         frappe.db.commit()
@@ -401,7 +401,7 @@ def fetch_tax_category_codes(company: Union[str, None] = None):
 
 def _map_country_codes(api_data):
     """
-    Map API response to FIRS Country Codes document fields.
+    Map API response to NRS Country Codes document fields.
 
     API Response fields:
         - name -> country
@@ -422,7 +422,7 @@ def _map_country_codes(api_data):
         return None
 
     return {
-        "doctype": "FIRS Country Codes",
+        "doctype": "NRS Country Codes",
         "country": name,
         "alpha2": alpha2,
         "alpha3": alpha3,
@@ -432,7 +432,7 @@ def _map_country_codes(api_data):
 @frappe.whitelist()
 def fetch_country_codes(company: Union[str, None] = None):
     """
-    Fetch Country Codes from DigiTax API and create FIRS Country Codes documents.
+    Fetch Country Codes from DigiTax API and create NRS Country Codes documents.
 
     Args:
         company: Company name (optional, defaults to user's default company)
@@ -443,10 +443,10 @@ def fetch_country_codes(company: Union[str, None] = None):
     try:
         client = DigitaxClient(company=company)
         resources = _fetch_resources_from_api(
-            client, "resources/countries", "FIRS Settings"
+            client, "resources/countries", "NRS Settings"
         )
         stats, errors = _process_resources(
-            resources, "FIRS Country Codes", _map_country_codes
+            resources, "NRS Country Codes", _map_country_codes
         )
 
         frappe.db.commit()

@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class FIRSHSCode(Document):
+class NRSHSCode(Document):
 	pass

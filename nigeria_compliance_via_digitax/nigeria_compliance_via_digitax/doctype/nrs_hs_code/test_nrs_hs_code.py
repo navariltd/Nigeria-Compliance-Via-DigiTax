@@ -13,9 +13,9 @@ IGNORE_TEST_RECORD_DEPENDENCIES = []  # eg. ["User"]
 
 
 
-class IntegrationTestFIRSSettings(IntegrationTestCase):
+class IntegrationTestNRSHSCode(IntegrationTestCase):
 	"""
-	Integration tests for FIRSSettings.
+	Integration tests for NRSHSCode.
 	Use this class for testing interactions between multiple components.
 	"""
 

@@ -11,9 +11,9 @@ from nigeria_compliance_via_digitax.utils import (
 )
 
 
-class FIRSSettings(Document):
+class NRSSettings(Document):
     def after_insert(self):
-        # Fetch reference codes when FIRS Settings is created for the first time
+        # Fetch reference codes when NRS Settings is created for the first time
         fetch_digitax_reference_codes(self)
 
     def on_update(self):
@@ -21,7 +21,7 @@ class FIRSSettings(Document):
         fetch_digitax_reference_codes(self)
 
 def fetch_digitax_reference_codes(doc, method=None) -> None:
-    """Fetch DigiTax reference data whenever FIRS Settings is saved or updated."""
+    """Fetch DigiTax reference data whenever NRS Settings is saved or updated."""
     if not doc.company:
         return
 
@@ -31,16 +31,16 @@ def fetch_digitax_reference_codes(doc, method=None) -> None:
         fetch_country_codes(company=doc.company)
     except Exception:
         frappe.log_error(
-            title="FIRS Settings Auto Fetch Failed",
+            title="NRS Settings Auto Fetch Failed",
             message=(
-                f"FIRS Settings: {doc.name}\n"
+                f"NRS Settings: {doc.name}\n"
                 f"Company: {doc.company}\n"
                 f"{frappe.get_traceback()}"
             ),
         )
         frappe.msgprint(
             msg=_(
-                "FIRS Settings was saved, but automatic DigiTax reference code fetch failed. "
+                "NRS Settings was saved, but automatic DigiTax reference code fetch failed. "
                 "You can retry using the Fetch buttons."
             ),
             title=_("Auto Fetch Warning"),
