@@ -1,6 +1,6 @@
 # Nigeria Compliance Via Digitax
 
-Federal Inland Revenue Service (FIRS) integration via Digitax by Navari Ltd for Nigeria.
+Nigeria Revenue Service (NRS) integration via Digitax by Navari Ltd for Nigeria.
 
 ### [User Guide](https://docs.navari.co.ke/nigeria-compliance/introduction/nigeria-compliance)
 
@@ -9,17 +9,17 @@ Federal Inland Revenue Service (FIRS) integration via Digitax by Navari Ltd for 
 ## Summary of Main Features
 
 - **DigiTax integration for ERPNext/Frappe**
-  Connects ERPNext transactions to the DigiTax Nigeria API for FIRS-aligned invoicing and status synchronization.
+  Connects ERPNext transactions to the DigiTax Nigeria API for NRS-aligned invoicing and status synchronization.
 
-- **Centralized FIRS settings and environment configuration**
-  Provides a dedicated **FIRS Settings** DocType for company-level setup, including API key, base URL, environment, and sales-tracking controls.
+- **Centralized NRS settings and environment configuration**
+  Provides a dedicated **NRS Settings** DocType for company-level setup, including API key, base URL, environment, and sales-tracking controls.
 
 - **Reference code management from DigiTax**
   Supports fetching and updating:
   - Invoice Type Codes
   - Tax Category Codes
   - Country Codes
-  via FIRS Settings buttons and backend utility endpoints, with create/update/unchanged stats in responses.
+  via NRS Settings buttons and backend utility endpoints, with create/update/unchanged stats in responses.
 
 - **Automatic customer (party) sync**
   On customer updates, the app syncs party data to DigiTax using Tax ID and address details, then stores:
@@ -27,14 +27,14 @@ Federal Inland Revenue Service (FIRS) integration via Digitax by Navari Ltd for 
   - Active status from DigiTax
   with validation and warning messages when required data is missing.
 
-- **Automatic item sync for FIRS-tracked items**
-  On item updates, items marked **Allow FIRS Tracking** are pushed to DigiTax and assigned a DigiTax item ID.
-  The sync uses FIRS tax/product categorization and protects against duplicate re-sync when an ID already exists.
+- **Automatic item sync for NRS-tracked items**
+  On item updates, items marked **Allow NRS Tracking** are pushed to DigiTax and assigned a DigiTax item ID.
+  The sync uses NRS tax/product categorization and protects against duplicate re-sync when an ID already exists.
 
 - **Sales Invoice lifecycle integration**
   Adds invoice workflow automation:
   - Custom autonaming format for Sales Invoices
-  - Validation of required DigiTax/FIRS fields before submission
+  - Validation of required DigiTax/NRS fields before submission
   - Submission to DigiTax on `before_submit` (standard invoice or credit note endpoint)
   - Mapping DigiTax response fields back to Sales Invoice custom fields
   - Automatic payment-status sync for POS-paid invoices and cancelled invoices
@@ -49,9 +49,9 @@ Federal Inland Revenue Service (FIRS) integration via Digitax by Navari Ltd for 
   Includes a daily scheduler job that retries submitted Sales Invoices still missing DigiTax invoice IDs, with optional lookup by reference number and result logging.
 
 - **Custom field extensions for compliance tracking**
-  Ships fixtures adding DigiTax/FIRS fields on Customer, Item, Sales Invoice, and Sales Invoice Item to persist:
+  Ships fixtures adding DigiTax/NRS fields on Customer, Item, Sales Invoice, and Sales Invoice Item to persist:
   - DigiTax IDs
-  - FIRS tax categories
+  - NRS tax categories
   - Payment/signing/validation metadata
   - Tracking flags used in compliance workflows
 
@@ -62,22 +62,22 @@ Federal Inland Revenue Service (FIRS) integration via Digitax by Navari Ltd for 
 
 To set up the app, you need to configure the following settings in your Frappe site:
 
-1. **FIRS Settings**: This is where you will enter your DigiTax API credentials and other related configurations.
+1. **NRS Settings**: This is where you will enter your DigiTax API credentials and other related configurations.
 2. **Customer Details**: This is where you will enter the details of your customers that are required for tax compliance.
 3. **Item Details**: This is where you will enter the details of your items that are required for tax compliance.
 
-### 1. FIRS Settings
+### 1. NRS Settings
 
 ![alt text](image-1.png)
 
-In the FIRS Settings, you need to enter the following information:
+In the NRS Settings, you need to enter the following information:
 
 - **DigiTax API Key**: This is the API key provided by DigiTax for authentication.
 - **DigiTax API URL**: This is the base URL for the DigiTax API. The default value is `https://api.digitax.tech/ng/v1`.
 - **Enable DigiTax Integration**: This checkbox enables or disables the integration with DigiTax. When enabled, the app will automatically send tax-related data to DigiTax for compliance.
 - **Environment**: This field allows you to name the environment (e.g., Production, Staging) for better identification when managing multiple environments.
 
-If the correct API Key is entered, the app will automatically fetch and populate the Tax Categories, Invoice Type Codes and FIRS Country Codes from DigiTax, which will be used when creating or updating items for tax compliance.
+If the correct API Key is entered, the app will automatically fetch and populate the Tax Categories, Invoice Type Codes and NRS Country Codes from DigiTax, which will be used when creating or updating items for tax compliance.
 
 To refetch any of the codes, click the relevant button(s).
 
@@ -99,13 +99,13 @@ If a customer has a **Tax Identification Number (TIN) and an address**:
 
 - The `is active` checkbox indicates whether the customer identified by the Tax ID is active on the DigiTax system or not.
 
-1. In the `Tax` tab, link the item to the relevant FIRS Tax Category and FIRS Product category. After saving the document, a DigiTax ID will be automatically generated.
+1. In the `Tax` tab, link the item to the relevant NRS Tax Category and NRS Product category. After saving the document, a DigiTax ID will be automatically generated.
 
 ![Item Tax Tab](image-6.png)
 
 ### 3. Item Details
 
-1. After creating a new item. On the `Inventory` tab of the item, check the `Allow FIRS Tracking` check field.
+1. After creating a new item. On the `Inventory` tab of the item, check the `Allow NRS Tracking` check field.
 
 ![Item Inventory Tab](image-5.png)
 
