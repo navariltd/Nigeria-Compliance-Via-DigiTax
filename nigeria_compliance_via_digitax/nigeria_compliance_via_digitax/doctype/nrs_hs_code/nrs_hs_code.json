@@ -23,6 +23,7 @@
    "fieldname": "description",
    "fieldtype": "Small Text",
    "in_list_view": 1,
+   "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Description"
   },
@@ -30,6 +31,7 @@
    "fieldname": "category",
    "fieldtype": "Select",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Category",
    "options": "Item\nService",
    "reqd": 1
@@ -38,7 +40,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-17 12:11:32.316974",
+ "modified": "2026-06-02 21:01:18.906323",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "NRS HS Code",
