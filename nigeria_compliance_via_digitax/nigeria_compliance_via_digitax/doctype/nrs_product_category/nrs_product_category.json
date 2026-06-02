@@ -32,13 +32,13 @@
    "fieldname": "hs_code",
    "fieldtype": "Link",
    "label": "HS Code",
-   "options": "FIRS HS Code"
+   "options": "NRS HS Code"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-17 09:24:09.682825",
+ "modified": "2026-06-02 08:04:16.897083",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "NRS Product Category",
