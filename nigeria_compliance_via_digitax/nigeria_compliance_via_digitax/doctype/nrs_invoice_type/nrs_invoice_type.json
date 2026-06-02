@@ -33,7 +33,7 @@
  "modified": "2026-03-01 23:20:56.915294",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
- "name": "FIRS Invoice Type",
+ "name": "NRS Invoice Type",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

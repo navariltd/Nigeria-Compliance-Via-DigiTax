@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class FIRSInvoiceType(Document):
+class NRSInvoiceType(Document):
 	pass
