@@ -309,10 +309,10 @@ def _build_invoice_payload(doc) -> Dict[str, Any]:
 
 def _get_invoice_type_code(invoice_type_name: str) -> str:
     """
-    Get the invoice type code from FIRS Invoice Type.
+    Get the invoice type code from NRS Invoice Type.
 
     Args:
-        invoice_type_name: Name/value of the FIRS Invoice Type
+        invoice_type_name: Name/value of the NRS Invoice Type
 
     Returns:
         Invoice type code
@@ -324,13 +324,13 @@ def _get_invoice_type_code(invoice_type_name: str) -> str:
         frappe.throw(_("Invoice type is required"))
 
     invoice_type = frappe.db.get_value(
-        "FIRS Invoice Type", {"value": invoice_type_name}, ["code"], as_dict=False
+        "NRS Invoice Type", {"value": invoice_type_name}, ["code"], as_dict=False
     )
 
     if not invoice_type:
         frappe.throw(
             _(
-                "FIRS Invoice Type '{0}' not found. Please fetch invoice types from DigiTax API."
+                "NRS Invoice Type '{0}' not found. Please fetch invoice types from DigiTax API."
             ).format(invoice_type_name)
         )
 
