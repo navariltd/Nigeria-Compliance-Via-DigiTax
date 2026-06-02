@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class FIRSTaxCategory(Document):
+class NRSTaxCategory(Document):
 	pass

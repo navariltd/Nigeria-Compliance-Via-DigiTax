@@ -50,7 +50,7 @@
  "modified": "2026-02-16 13:01:11.317170",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
- "name": "FIRS Tax Category",
+ "name": "NRS Tax Category",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
