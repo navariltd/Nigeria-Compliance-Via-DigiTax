@@ -3,8 +3,6 @@
 
 import csv
 import frappe
-import json
-import os
 import requests
 
 from frappe import _
@@ -118,16 +116,16 @@ def load_hs_codes():
 
 def load_service_codes():
     """
-    Load service codes from a remote CSV file and populate the FIRS HS Code database.
+    Load service codes from a remote CSV file and populate the NRS HS Code database.
 
-    This function fetches service codes from Namiri-Tech GitHub repository and creates FIRS HS Code
+    This function fetches service codes from Namiri-Tech GitHub repository and creates NRS HS Code
     records in the database. It skips the import if service codes already exist to prevent
     duplicates.
 
     Process:
     1. Fetches service codes from a remote CSV URL with a 30-second timeout
     2. Checks if service codes already exist in the database
-    3. Iterates through CSV rows and creates new FIRS HS Code documents for each unique code
+    3. Iterates through CSV rows and creates new NRS HS Code documents for each unique code
     4. Logs errors for individual records without stopping the entire process
     5. Commits all changes to the database upon completion
 
@@ -139,7 +137,7 @@ def load_service_codes():
             None
 
     Side Effects:
-            - Creates new FIRS HS Code records in the database
+            - Creates new NRS HS Code records in the database
             - Logs info and error messages using frappe.logger()
             - Commits database transactions
     """

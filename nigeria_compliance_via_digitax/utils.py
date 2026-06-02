@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 """
-Utility functions for managing FIRS HS Codes, Service Codes, and Tax Categories.
+Utility functions for managing NRS HS Codes, Service Codes, and Tax Categories.
 These can be called from the Frappe console or programmatically.
 """
 
@@ -261,7 +261,7 @@ def _build_result_message(stats, resource_name):
 
 def _map_invoice_type(api_data):
     """
-    Map API response to FIRS Invoice Type document fields.
+    Map API response to NRS Invoice Type document fields.
 
     Args:
         api_data: Dictionary from API response
@@ -324,7 +324,7 @@ def fetch_invoice_type_codes(company: Union[str, None] = None):
 
 def _map_tax_category(api_data):
     """
-    Map API response to FIRS Tax Category document fields.
+    Map API response to NRS Tax Category document fields.
 
     API Response fields:
         - code -> tax_code
@@ -401,7 +401,7 @@ def fetch_tax_category_codes(company: Union[str, None] = None):
 
 def _map_country_codes(api_data):
     """
-    Map API response to FIRS Country Codes document fields.
+    Map API response to NRS Country Codes document fields.
 
     API Response fields:
         - name -> country
