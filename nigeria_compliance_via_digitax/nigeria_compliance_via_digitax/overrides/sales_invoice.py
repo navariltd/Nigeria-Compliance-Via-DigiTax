@@ -215,10 +215,10 @@ def _update_invoice_from_response(doc, response: Dict[str, Any]) -> None:
 
     is_valid = True if response.get("is_valid") else False
 
-    doc.db_set("nc_is_firs_valid", is_valid)
+    doc.db_set("nc_is_nrs_valid", is_valid)
 
     if response.get("signed_at") and is_valid:
-        doc.db_set("nc_submitted_to_firs", True)
+        doc.db_set("nc_submitted_to_nrs", True)
 
     for response_field, doc_field in field_mapping.items():
         if response.get(response_field) is not None:
@@ -250,8 +250,8 @@ def _validate_invoice_data(doc) -> None:
     """
     errors = []
 
-    if not doc.get("firs_invoice_type"):
-        errors.append(_("FIRS Invoice Type is required"))
+    if not doc.get("nrs_invoice_type"):
+        errors.append(_("NRS Invoice Type is required"))
 
     if not doc.items:
         errors.append(_("Invoice must have at least one item"))
@@ -262,9 +262,9 @@ def _validate_invoice_data(doc) -> None:
                 _("Item {0} must be synced with DigiTax").format(item.item_code)
             )
 
-        if not item.get("firs_tax_category"):
+        if not item.get("nrs_tax_category"):
             errors.append(
-                _("Item {0} must have a FIRS Tax Category").format(item.item_code)
+                _("Item {0} must have a NRS Tax Category").format(item.item_code)
             )
 
     if errors:
@@ -284,7 +284,7 @@ def _build_invoice_payload(doc) -> Dict[str, Any]:
     payload = {
         "invoice_date": doc.posting_date,
         "issue_date": nowdate(),
-        "invoice_type_code": _get_invoice_type_code(doc.get("firs_invoice_type")),
+        "invoice_type_code": _get_invoice_type_code(doc.get("nrs_invoice_type")),
         "document_currency_code": doc.currency,
         "trader_invoice_number": doc.name,
         "items": _map_invoice_items(doc.items),
@@ -355,8 +355,8 @@ def _map_invoice_items(items: List) -> List[Dict[str, Any]]:
                 "item_id": item.get("digitax_id"),
                 "quantity": abs(item.qty),
                 "unit_price": item.rate,
-                "tax_rate": _get_tax_rate_from_firs_tax_category(
-                    item.get("firs_tax_category")
+                "tax_rate": _get_tax_rate_from_nrs_tax_category(
+                    item.get("nrs_tax_category")
                 ),
             }
         )
@@ -364,12 +364,12 @@ def _map_invoice_items(items: List) -> List[Dict[str, Any]]:
     return mapped_items
 
 
-def _get_tax_rate_from_firs_tax_category(tax_category_name: str) -> float:
+def _get_tax_rate_from_nrs_tax_category(tax_category_name: str) -> float:
     """
-    Fetch the tax rate from FIRS Tax Category.
+    Fetch the tax rate from NRS Tax Category.
 
     Args:
-        tax_category_name: Name of the FIRS Tax Category
+        tax_category_name: Name of the NRS Tax Category
 
     Returns:
         Tax rate as a float if found, otherwise 0
@@ -378,7 +378,7 @@ def _get_tax_rate_from_firs_tax_category(tax_category_name: str) -> float:
         return 0.0
 
     tax_rate = frappe.db.get_value(
-        "FIRS Tax Category", {"category_name": tax_category_name}, "tax_rate"
+        "NRS Tax Category", {"category_name": tax_category_name}, "tax_rate"
     )
 
     return float(tax_rate) if tax_rate else 0.0
@@ -429,21 +429,21 @@ def _handle_unexpected_error(doc, error: Exception) -> None:
     )
 
 
-def set_firs_invoice_type(doc, method=None):
+def set_nrs_invoice_type(doc, method=None):
     """
-    Auto-set FIRS Invoice Type based on invoice type.
+    Auto-set NRS Invoice Type based on invoice type.
 
     Args:
         doc: Sales Invoice document
         method: Hook method name (optional)
     """
-    if not doc.get("firs_invoice_type"):
+    if not doc.get("nrs_invoice_type"):
         if doc.is_return:
-            doc.firs_invoice_type = "Credit Note"
+            doc.nrs_invoice_type = "Credit Note"
         elif doc.is_debit_note:
-            doc.firs_invoice_type = "Debit Note"
+            doc.nrs_invoice_type = "Debit Note"
         else:
-            doc.firs_invoice_type = "Commercial Invoice"
+            doc.nrs_invoice_type = "Commercial Invoice"
 
 
 @frappe.whitelist()
