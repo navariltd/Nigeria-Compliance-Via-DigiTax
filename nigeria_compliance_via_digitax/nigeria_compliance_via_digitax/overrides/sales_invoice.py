@@ -1,5 +1,6 @@
 import re
 import frappe
+import json
 from typing import Optional, Dict, Any, List
 from frappe import _
 from frappe.model.naming import make_autoname
@@ -262,11 +263,6 @@ def _validate_invoice_data(doc) -> None:
                 _("Item {0} must be synced with DigiTax").format(item.item_code)
             )
 
-        if not item.get("nrs_tax_category"):
-            errors.append(
-                _("Item {0} must have a NRS Tax Category").format(item.item_code)
-            )
-
     if errors:
         frappe.throw("<br>".join(errors), title=_("DigiTax Validation Failed"))
 
@@ -355,9 +351,7 @@ def _map_invoice_items(items: List) -> List[Dict[str, Any]]:
                 "item_id": item.get("digitax_id"),
                 "quantity": abs(item.qty),
                 "unit_price": item.rate,
-                "tax_rate": _get_tax_rate_from_nrs_tax_category(
-                    item.get("nrs_tax_category")
-                ),
+                "tax_rate": _get_calculated_tax_rate(item),
             }
         )
 
@@ -382,6 +376,21 @@ def _get_tax_rate_from_nrs_tax_category(tax_category_name: str) -> float:
     )
 
     return float(tax_rate) if tax_rate else 0.0
+
+
+def _get_calculated_tax_rate(item) -> float:
+    """
+    Extracts the tax rate from the item's calculated tax rate JSON.
+    """
+    if not item.get("item_tax_rate"):
+        return _get_tax_rate_from_nrs_tax_category(item.get("nrs_tax_category"))
+
+    try:
+        tax_map = json.loads(item.item_tax_rate)
+        rates = list(tax_map.values())
+        return (float(rates[0]) / 100) if rates else 0.0
+    except (json.JSONDecodeError, ValueError, IndexError):
+        return 0.0
 
 
 def _handle_digitax_error(doc, error: DigitaxAPIException) -> None:
