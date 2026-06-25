@@ -1,7 +1,7 @@
 {
  "app": "nigeria_compliance_via_digitax",
  "charts": [],
- "content": "[{\"id\":\"KuHSdbWXl6\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">DigiTax Integration</span>\",\"col\":12}},{\"id\":\"RIBHOiAeSt\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Integration Request\",\"col\":4}},{\"id\":\"BLE63ltCmM\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Error Log\",\"col\":5}},{\"id\":\"SDulTK9KH2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Qk3iMQ-RUV\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup & Masters\",\"col\":4}},{\"id\":\"KberMbkVa-\",\"type\":\"card\",\"data\":{\"card_name\":\"Codes and Types\",\"col\":4}},{\"id\":\"QtXodUbF9L\",\"type\":\"card\",\"data\":{\"card_name\":\"Categories\",\"col\":4}}]",
+ "content": "[{\"id\":\"KuHSdbWXl6\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">DigiTax Integration</span>\",\"col\":12}},{\"id\":\"7Dga7JsWjx\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Paid Sales Invoices\",\"col\":4}},{\"id\":\"_DjFZXKCN1\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Invoices Sent to NRS\",\"col\":4}},{\"id\":\"Dk3hS6HOum\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Unsent Invoices\",\"col\":4}},{\"id\":\"JpHI5y_bzZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Invoice\",\"col\":3}},{\"id\":\"RIBHOiAeSt\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Integration Request\",\"col\":4}},{\"id\":\"BLE63ltCmM\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Error Log\",\"col\":5}},{\"id\":\"SDulTK9KH2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Qk3iMQ-RUV\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup & Masters\",\"col\":4}},{\"id\":\"KberMbkVa-\",\"type\":\"card\",\"data\":{\"card_name\":\"Codes and Types\",\"col\":4}},{\"id\":\"QtXodUbF9L\",\"type\":\"card\",\"data\":{\"card_name\":\"Categories\",\"col\":4}}]",
  "creation": "2026-05-12 09:02:32.726721",
  "custom_blocks": [],
  "docstatus": 0,
@@ -132,11 +132,24 @@
    "type": "Link"
   }
  ],
- "modified": "2026-06-02 12:10:28.144877",
+ "modified": "2026-06-25 14:54:51.395085",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "Nigeria Compliance",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Paid Sales Invoices",
+   "number_card_name": "Paid Sales Invoices"
+  },
+  {
+   "label": "Unsent Invoices",
+   "number_card_name": "Invoices Not Sent to DigiTax"
+  },
+  {
+   "label": "Invoices Sent to NRS",
+   "number_card_name": "Invoices Sent to NRS"
+  }
+ ],
  "owner": "Administrator",
  "public": 1,
  "quick_lists": [],
@@ -148,6 +161,14 @@
    "doc_view": "List",
    "label": "Error Log",
    "link_to": "Error Log",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Sales Invoice",
+   "link_to": "Sales Invoice",
    "stats_filter": "[]",
    "type": "DocType"
   },

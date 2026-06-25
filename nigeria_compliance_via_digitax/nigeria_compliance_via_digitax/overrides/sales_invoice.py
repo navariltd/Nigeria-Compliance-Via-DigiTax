@@ -79,6 +79,71 @@ def submit_sales_invoice(doc, method: Optional[str] = None) -> None:
         _handle_unexpected_error(doc, e)
 
 
+@frappe.whitelist()
+def resubmit_to_digitax(sales_invoice: str) -> Optional[Dict[str, Any]]:
+    """
+    Resubmit a Sales Invoice to DigiTax when it has no DigiTax invoice ID.
+
+    This is used to handle cases where the original submission failed and
+    nc_invoice_id was never populated. Only allowed when nc_invoice_id is null.
+
+    Args:
+        sales_invoice: Name of the Sales Invoice document
+
+    Returns:
+        DigiTax API response dictionary
+    """
+    if not frappe.db.exists("Sales Invoice", sales_invoice):
+        frappe.throw(_("Sales Invoice {0} not found").format(sales_invoice))
+
+    doc = frappe.get_doc("Sales Invoice", sales_invoice)
+
+    if doc.docstatus != 1:
+        frappe.throw(_("Only submitted invoices can be resubmitted to DigiTax"))
+
+    if doc.get("nc_invoice_id"):
+        frappe.throw(
+            _(
+                "Invoice {0} already has a DigiTax invoice ID ({1}). "
+                "Resubmission is not allowed."
+            ).format(doc.name, doc.nc_invoice_id)
+        )
+
+    try:
+        _validate_invoice_data(doc)
+
+        invoice_payload = _build_invoice_payload(doc)
+        client = DigitaxClient(company=doc.company)
+
+        endpoint = "/credit-notes" if doc.is_return else "/invoices"
+
+        response = client.post(
+            endpoint=endpoint,
+            data=invoice_payload,
+            reference_doctype="Sales Invoice",
+            reference_docname=doc.name,
+        )
+
+        if response:
+            _update_invoice_from_response(doc, response)
+
+            if doc.is_return and doc.get("return_against"):
+                _sync_original_invoice_payment_status_after_credit_note(doc)
+
+            frappe.msgprint(
+                _("Invoice successfully resubmitted to DigiTax"),
+                title=_("DigiTax Resubmission"),
+                indicator="green",
+            )
+
+            return response
+
+    except DigitaxAPIException as e:
+        _handle_digitax_error(doc, e)
+    except Exception as e:
+        _handle_unexpected_error(doc, e)
+
+
 def sync_paid_invoice_payment_status(doc, method: Optional[str] = None) -> None:
     """
     Sync payment status to PAID in DigiTax for invoices that are fully paid on submit.
