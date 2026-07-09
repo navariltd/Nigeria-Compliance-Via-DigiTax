@@ -187,6 +187,10 @@ def _get_conditions(filters: dict) -> tuple[str, dict]:
 		conditions.append("and si.name = %(sales_invoice)s")
 		values["sales_invoice"] = filters["sales_invoice"]
 
+	if filters.get("customer"):
+		conditions.append("and si.customer = %(customer)s")
+		values["customer"] = filters["customer"]
+
 	if filters.get("payment_status"):
 		payment_status = filters["payment_status"].upper()
 		values["payment_status"] = payment_status

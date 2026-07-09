@@ -35,6 +35,12 @@ frappe.query_reports["NRS Compliance Status"] = {
 			},
 		},
 		{
+			fieldname: "customer",
+			label: __("Customer"),
+			fieldtype: "Link",
+			options: "Customer",
+		},
+		{
 			fieldname: "payment_status",
 			label: __("Payment Status"),
 			fieldtype: "Select",
