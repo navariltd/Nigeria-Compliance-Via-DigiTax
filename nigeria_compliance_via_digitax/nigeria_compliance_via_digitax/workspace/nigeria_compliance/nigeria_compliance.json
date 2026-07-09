@@ -17,45 +17,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Codes and Types",
-   "link_count": 3,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "NRS Country Codes",
-   "link_count": 0,
-   "link_to": "NRS Country Codes",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "NRS HS Code",
-   "link_count": 0,
-   "link_to": "NRS HS Code",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "NRS Invoice Type",
-   "link_count": 0,
-   "link_to": "NRS Invoice Type",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Categories",
    "link_count": 2,
    "link_type": "DocType",
@@ -130,9 +91,58 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Codes and Types",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "NRS Country Codes",
+   "link_count": 0,
+   "link_to": "NRS Country Codes",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "NRS HS Code",
+   "link_count": 0,
+   "link_to": "NRS HS Code",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "NRS Invoice Type",
+   "link_count": 0,
+   "link_to": "NRS Invoice Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "NRS Party Type",
+   "link_count": 0,
+   "link_to": "NRS Party Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-06-25 14:54:51.395085",
+ "modified": "2026-07-09 11:43:43.202172",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "Nigeria Compliance",
