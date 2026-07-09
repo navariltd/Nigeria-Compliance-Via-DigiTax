@@ -319,6 +319,9 @@ def _validate_invoice_data(doc) -> None:
     if not doc.get("nrs_invoice_type"):
         errors.append(_("NRS Invoice Type is required"))
 
+    if not doc.get("nc_invoice_kind"):
+        errors.append(_("DigiTax Invoice Kind is required"))
+
     if not doc.items:
         errors.append(_("Invoice must have at least one item"))
 
@@ -348,6 +351,7 @@ def _build_invoice_payload(doc) -> Dict[str, Any]:
         "invoice_type_code": _get_invoice_type_code(doc.get("nrs_invoice_type")),
         "document_currency_code": doc.currency,
         "trader_invoice_number": doc.name,
+        "invoice_kind": doc.get("nc_invoice_kind"),
         "items": _map_invoice_items(doc.items),
     }
 
