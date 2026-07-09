@@ -18,7 +18,8 @@ def update_invoice_payment_status(doc, method: Optional[str] = None) -> None:
     This function is called via hooks on Journal Entry submission.
     It inspects each account row for references to Sales Invoices tracked by
     NRS, then updates the payment status in DigiTax to "PAID" for any
-    invoice whose outstanding amount has reached zero.
+    invoice whose outstanding amount has reached zero. Failures are logged for
+    scheduled retry and do not block journal submission.
 
     Args:
 		doc: The Journal Entry document
@@ -47,12 +48,11 @@ def update_invoice_payment_status(doc, method: Optional[str] = None) -> None:
             )
             frappe.msgprint(
                 _(
-                    "Failed to update payment status for invoice {0} in DigiTax: {1}"
+                    "Journal Entry was submitted, but DigiTax payment status update for invoice {0} failed and will be retried: {1}"
                 ).format(invoice_name, str(e)),
                 title=_("DigiTax Update Warning"),
                 indicator="orange",
             )
-            raise
 
 
 def _process_invoice_payment_update(invoice_name: str, journal_entry_doc) -> None:
