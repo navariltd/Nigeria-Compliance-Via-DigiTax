@@ -1,7 +1,7 @@
 {
  "app": "nigeria_compliance_via_digitax",
  "charts": [],
- "content": "[{\"id\":\"KuHSdbWXl6\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">DigiTax Integration</span>\",\"col\":12}},{\"id\":\"7Dga7JsWjx\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Paid Sales Invoices\",\"col\":4}},{\"id\":\"_DjFZXKCN1\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Invoices Sent to NRS\",\"col\":4}},{\"id\":\"Dk3hS6HOum\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Unsent Invoices\",\"col\":4}},{\"id\":\"JpHI5y_bzZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Invoice\",\"col\":3}},{\"id\":\"RIBHOiAeSt\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Integration Request\",\"col\":4}},{\"id\":\"BLE63ltCmM\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Error Log\",\"col\":5}},{\"id\":\"SDulTK9KH2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Qk3iMQ-RUV\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup & Masters\",\"col\":4}},{\"id\":\"KberMbkVa-\",\"type\":\"card\",\"data\":{\"card_name\":\"Codes and Types\",\"col\":4}},{\"id\":\"QtXodUbF9L\",\"type\":\"card\",\"data\":{\"card_name\":\"Categories\",\"col\":4}}]",
+ "content": "[{\"id\":\"KuHSdbWXl6\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">DigiTax Integration</span>\",\"col\":12}},{\"id\":\"7Dga7JsWjx\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Paid Sales Invoices\",\"col\":4}},{\"id\":\"_DjFZXKCN1\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Invoices Sent to NRS\",\"col\":4}},{\"id\":\"Dk3hS6HOum\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Unsent Invoices\",\"col\":4}},{\"id\":\"JpHI5y_bzZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Invoice\",\"col\":3}},{\"id\":\"RIBHOiAeSt\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Integration Request\",\"col\":4}},{\"id\":\"BLE63ltCmM\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Error Log\",\"col\":5}},{\"id\":\"SDulTK9KH2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Qk3iMQ-RUV\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup & Masters\",\"col\":4}},{\"id\":\"KberMbkVa-\",\"type\":\"card\",\"data\":{\"card_name\":\"Codes and Types\",\"col\":4}},{\"id\":\"QtXodUbF9L\",\"type\":\"card\",\"data\":{\"card_name\":\"Categories\",\"col\":4}},{\"id\":\"WVQ9YhY_f-\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2026-05-12 09:02:32.726721",
  "custom_blocks": [],
  "docstatus": 0,
@@ -140,9 +140,28 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "NRS Compliance Status",
+   "link_count": 0,
+   "link_to": "NRS Compliance Status",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-07-09 11:43:43.202172",
+ "modified": "2026-07-09 17:26:40.712740",
  "modified_by": "Administrator",
  "module": "Nigeria Compliance Via Digitax",
  "name": "Nigeria Compliance",
