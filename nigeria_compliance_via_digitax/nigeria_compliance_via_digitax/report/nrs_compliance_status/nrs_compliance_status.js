@@ -19,6 +19,12 @@ frappe.query_reports["NRS Compliance Status"] = {
 			fieldtype: "Date",
 		},
 		{
+			fieldname: "customer",
+			label: __("Customer"),
+			fieldtype: "Link",
+			options: "Customer",
+		},
+		{
 			fieldname: "sales_invoice",
 			label: __("Sales Invoice"),
 			fieldtype: "Link",
@@ -35,10 +41,10 @@ frappe.query_reports["NRS Compliance Status"] = {
 			},
 		},
 		{
-			fieldname: "customer",
-			label: __("Customer"),
+			fieldname: "invoice_kind",
+			label: __("Invoice Kind"),
 			fieldtype: "Link",
-			options: "Customer",
+			options: "NRS Party Type",
 		},
 		{
 			fieldname: "payment_status",

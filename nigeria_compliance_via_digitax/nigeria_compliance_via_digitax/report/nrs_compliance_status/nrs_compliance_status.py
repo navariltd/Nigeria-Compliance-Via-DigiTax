@@ -39,10 +39,10 @@ def get_columns() -> list[dict]:
 			"width": 110,
 		},
 		{
-			"label": _("Invoice Type"),
-			"fieldname": "invoice_type",
+			"label": _("Invoice Kind"),
+			"fieldname": "nc_invoice_kind",
 			"fieldtype": "Data",
-			"width": 140,
+			"width": 60,
 		},
 		{
 			"label": _("Grand Total"),
@@ -132,7 +132,7 @@ def get_data(filters: dict) -> list[dict]:
 			sales_invoice.name.as_("invoice"),
 			sales_invoice.customer,
 			sales_invoice.posting_date,
-			sales_invoice.nrs_invoice_type.as_("invoice_type"),
+			sales_invoice.nc_invoice_kind,
 			sales_invoice.grand_total,
 			sales_invoice.outstanding_amount,
 			sales_invoice.nc_invoice_id.as_("digitax_invoice_id"),
