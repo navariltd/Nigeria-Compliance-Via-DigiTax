@@ -56,7 +56,7 @@ frappe.query_reports["NRS Compliance Status"] = {
 			fieldname: "compliant_status",
 			label: __("Compliant Status"),
 			fieldtype: "Select",
-			options: "\nCompliant\nPending DigiTax Submission\nPending NRS Submission",
+			options: "\nCompliant\nPending DigiTax Submission\nPending NRS Submission\nPending NRS Validation",
 		},
 	],
 };
