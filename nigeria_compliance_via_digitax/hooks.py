@@ -162,9 +162,12 @@ doc_events = {
 # ---------------
 
 scheduler_events = {
+    "hourly": [
+        "nigeria_compliance_via_digitax.tasks.sync_pending_paid_invoice_payment_statuses"
+    ],
     "daily": [
         "nigeria_compliance_via_digitax.tasks.submit_pending_sales_invoices_to_digitax"
-    ]
+    ],
 }
 
 # Testing

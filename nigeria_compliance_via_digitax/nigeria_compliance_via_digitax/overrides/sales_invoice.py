@@ -275,6 +275,7 @@ def _update_invoice_from_response(doc, response: Dict[str, Any]) -> None:
         "validated_at": "nc_validated_at",
         "payment_status": "nc_payment_status",
         "invoice_reference_number": "nc_invoice_reference_number",
+        "invoice_kind": "nc_invoice_kind",
     }
 
     datetime_fields = ["signed_at", "validated_at"]
@@ -342,14 +343,25 @@ def _build_invoice_payload(doc) -> Dict[str, Any]:
     Returns:
         Dictionary containing invoice data for DigiTax API
     """
+    customer_group = _get_customer_group(doc.customer)
+    invoice_kind = _determine_invoice_kind(customer_group)
     payload = {
         "invoice_date": doc.posting_date,
         "issue_date": nowdate(),
         "invoice_type_code": _get_invoice_type_code(doc.get("nrs_invoice_type")),
         "document_currency_code": doc.currency,
         "trader_invoice_number": doc.name,
+        "invoice_kind": invoice_kind,
         "items": _map_invoice_items(doc.items),
     }
+
+    if invoice_kind == "B2B":
+        party_id = _get_customer_party_id(doc.customer)
+        if not party_id:
+            frappe.throw(
+                _("Customer {0} must be synced with DigiTax").format(doc.customer)
+            )
+        payload["party_id"] = party_id
 
     # For credit notes
     if doc.is_return and doc.get("return_against"):
@@ -679,3 +691,61 @@ def _sync_original_invoice_payment_status_after_credit_note(credit_note_doc) -> 
                 f"Error: {str(e)}\n{frappe.get_traceback()}"
             ),
         )
+
+
+def _get_customer_group(customer: str) -> Optional[str]:
+    """
+    Fetch the customer group for a given customer.
+
+    Args:
+        customer: Name of the Customer
+    Returns:
+        Customer Group name if found, otherwise None
+    """
+    if not customer:
+        return None
+
+    customer_group = frappe.db.get_value(
+        "Customer", {"name": customer}, "customer_group"
+    )
+    return customer_group
+
+
+def _determine_invoice_kind(customer_group: Optional[str]) -> str:
+    """
+    Determine the DigiTax invoice kind based on the customer group.
+
+    Args:
+        customer_group: Name of the Customer Group
+    Returns:
+        DigiTax invoice kind as a string
+    """
+    if not customer_group:
+        return "B2C"
+
+    if customer_group.lower() == "commercial":
+        return "B2B"
+    elif customer_group.lower() == "individual":
+        return "B2C"
+    elif customer_group.lower() == "government":
+        return "B2G"
+    else:
+        return "B2C"
+
+
+def _get_customer_party_id(customer: str) -> Optional[str]:
+    """
+    Fetch the DigiTax party ID for a given customer.
+
+    Args:
+        customer: Name of the Customer
+    Returns:
+        DigiTax party ID if found, otherwise None
+    """
+    if not customer:
+        return None
+
+    party_id = frappe.db.get_value(
+        "Customer", {"name": customer}, "custom_digitax_id"
+    )
+    return party_id

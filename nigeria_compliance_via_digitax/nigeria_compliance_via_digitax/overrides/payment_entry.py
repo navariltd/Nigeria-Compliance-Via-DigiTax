@@ -17,8 +17,8 @@ def update_invoice_payment_status(doc, method: Optional[str] = None) -> None:
 
 	This function is called via hooks on Payment Entry submission.
 	It checks if the payment is against a Sales Invoice tracked by NRS,
-	then updates the payment status in DigiTax to "PAID" if fully paid,
-	or "REJECTED" if there is still an outstanding amount.
+	then updates the payment status in DigiTax to "PAID" if fully paid.
+	Failures are logged for scheduled retry and do not block payment submission.
 
 	Args:
 		doc: The Payment Entry document
@@ -47,12 +47,11 @@ def update_invoice_payment_status(doc, method: Optional[str] = None) -> None:
 			)
 			frappe.msgprint(
 				_(
-					"Failed to update payment status for invoice {0} in DigiTax: {1}"
+					"Payment was submitted, but DigiTax payment status update for invoice {0} failed and will be retried: {1}"
 				).format(invoice_name, str(e)),
 				title=_("DigiTax Update Warning"),
 				indicator="orange",
 			)
-			raise
 
 
 def _process_invoice_payment_update(invoice_name: str, payment_doc) -> None:
