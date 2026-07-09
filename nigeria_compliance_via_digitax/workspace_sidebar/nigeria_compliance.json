@@ -1,0 +1,27 @@
+{
+ "app": "nigeria_compliance_via_digitax",
+ "creation": "2026-07-09 17:24:16.752597",
+ "docstatus": 0,
+ "doctype": "Workspace Sidebar",
+ "header_icon": "calculator",
+ "idx": 0,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Workspace",
+   "link_to": "Nigeria Compliance",
+   "link_type": "Workspace",
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-07-09 17:24:16.752597",
+ "modified_by": "Administrator",
+ "name": "Nigeria Compliance",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "Nigeria Compliance"
+}
