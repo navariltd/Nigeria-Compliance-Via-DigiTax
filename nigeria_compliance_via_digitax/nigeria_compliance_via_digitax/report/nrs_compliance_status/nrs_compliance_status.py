@@ -121,38 +121,81 @@ def get_columns() -> list[dict]:
 
 
 def get_data(filters: dict) -> list[dict]:
+	conditions, values = _get_conditions(filters)
+
 	return frappe.db.sql(
-		"""
-		select
-			si.name as invoice,
-			si.customer,
-			si.posting_date,
-			si.nrs_invoice_type as invoice_type,
-			si.grand_total,
-			si.outstanding_amount,
-			si.nc_invoice_id as digitax_invoice_id,
-			si.nc_invoice_number as digitax_invoice_number,
-			si.nc_invoice_reference_number as invoice_reference_number,
-			si.nc_submitted_to_nrs as submitted_to_nrs,
-			si.nc_is_nrs_valid as is_nrs_valid,
-			si.nc_payment_status as payment_status,
-			si.nc_signed_at as signed_at,
-			si.nc_validated_at as validated_at,
-			case
-				when ifnull(si.nc_invoice_id, '') = '' then 'Pending DigiTax Submission'
-				when ifnull(si.nc_submitted_to_nrs, 0) = 0 then 'Pending NRS Submission'
-				when ifnull(si.nc_is_nrs_valid, 0) = 0 then 'Pending NRS Validation'
-				when si.outstanding_amount <= 0
-					and upper(ifnull(si.nc_payment_status, '')) != 'PAID'
-					then 'Pending Payment Status Sync'
-				else 'Compliant'
-			end as compliance_status,
-			si.currency
-		from `tabSales Invoice` si
-		where si.docstatus = 1
-			and si.company = %(company)s
-		order by si.posting_date desc, si.name desc
+		f"""
+		select *
+		from (
+			select
+				si.name as invoice,
+				si.customer,
+				si.posting_date,
+				si.nrs_invoice_type as invoice_type,
+				si.grand_total,
+				si.outstanding_amount,
+				si.nc_invoice_id as digitax_invoice_id,
+				si.nc_invoice_number as digitax_invoice_number,
+				si.nc_invoice_reference_number as invoice_reference_number,
+				si.nc_submitted_to_nrs as submitted_to_nrs,
+				si.nc_is_nrs_valid as is_nrs_valid,
+				si.nc_payment_status as payment_status,
+				si.nc_signed_at as signed_at,
+				si.nc_validated_at as validated_at,
+				case
+					when ifnull(si.nc_invoice_id, '') = '' then 'Pending DigiTax Submission'
+					when ifnull(si.nc_submitted_to_nrs, 0) = 0 then 'Pending NRS Submission'
+					when ifnull(si.nc_is_nrs_valid, 0) = 0 then 'Pending NRS Validation'
+					when si.outstanding_amount <= 0
+						and upper(ifnull(si.nc_payment_status, '')) != 'PAID'
+						then 'Pending Payment Status Sync'
+					else 'Compliant'
+				end as compliance_status,
+				si.currency
+			from `tabSales Invoice` si
+			where si.docstatus = 1
+				and si.company = %(company)s
+				{conditions}
+		) compliance
+		where (
+			%(compliant_status)s is null
+			or compliance.compliance_status = %(compliant_status)s
+		)
+		order by compliance.posting_date desc, compliance.invoice desc
 		""",
-		{"company": filters["company"]},
+		values,
 		as_dict=True,
 	)
+
+
+def _get_conditions(filters: dict) -> tuple[str, dict]:
+	conditions = []
+	values = {
+		"company": filters["company"],
+		"compliant_status": filters.get("compliant_status") or None,
+	}
+
+	if filters.get("from_date"):
+		conditions.append("and si.posting_date >= %(from_date)s")
+		values["from_date"] = filters["from_date"]
+
+	if filters.get("to_date"):
+		conditions.append("and si.posting_date <= %(to_date)s")
+		values["to_date"] = filters["to_date"]
+
+	if filters.get("sales_invoice"):
+		conditions.append("and si.name = %(sales_invoice)s")
+		values["sales_invoice"] = filters["sales_invoice"]
+
+	if filters.get("payment_status"):
+		payment_status = filters["payment_status"].upper()
+		values["payment_status"] = payment_status
+
+		if payment_status == "PENDING":
+			conditions.append(
+				"and upper(ifnull(nullif(si.nc_payment_status, ''), 'PENDING')) = %(payment_status)s"
+			)
+		else:
+			conditions.append("and upper(ifnull(si.nc_payment_status, '')) = %(payment_status)s")
+
+	return "\n\t\t\t\t".join(conditions), values

@@ -15,6 +15,44 @@
    "mandatory": 1,
    "options": "Company",
    "wildcard_filter": 0
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "mandatory": 0,
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "mandatory": 0,
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "sales_invoice",
+   "fieldtype": "Link",
+   "label": "Sales Invoice",
+   "mandatory": 0,
+   "options": "Sales Invoice",
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "payment_status",
+   "fieldtype": "Select",
+   "label": "Payment Status",
+   "mandatory": 0,
+   "options": "\nREJECTED\nPAID\nPENDING",
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "compliant_status",
+   "fieldtype": "Select",
+   "label": "Compliant Status",
+   "mandatory": 0,
+   "options": "\nCompliant\nPending DigiTax Submission\nPending NRS Submission",
+   "wildcard_filter": 0
   }
  ],
  "idx": 0,
