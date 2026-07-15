@@ -207,6 +207,91 @@ def sync_paid_invoice_payment_status(doc, method: Optional[str] = None) -> None:
         )
 
 
+@frappe.whitelist()
+def resend_digitax_payment_status(sales_invoice: str) -> Optional[Dict[str, Any]]:
+    """
+    Manually resend the current Sales Invoice payment status to DigiTax.
+
+    Fully paid submitted invoices are sent as PAID. Cancelled invoices are sent
+    as REJECTED. This is intended for retrying status updates when the invoice
+    is already in DigiTax but has not yet been signed or updated there.
+    """
+    if not frappe.db.exists("Sales Invoice", sales_invoice):
+        frappe.throw(_("Sales Invoice {0} not found").format(sales_invoice))
+
+    doc = frappe.get_doc("Sales Invoice", sales_invoice)
+    payment_status = _get_digitax_payment_status_for_manual_resend(doc)
+
+    try:
+        client = DigitaxClient(company=doc.company)
+        response = client.put(
+            endpoint="/invoices",
+            path_param=f"{doc.nc_invoice_id}/payment-status",
+            data={"payment_status": payment_status},
+            reference_doctype="Sales Invoice",
+            reference_docname=doc.name,
+        )
+
+        if response:
+            _update_invoice_from_response(doc, response)
+            frappe.msgprint(
+                _("Payment status successfully resent to DigiTax as {0}").format(
+                    payment_status
+                ),
+                title=_("DigiTax Payment Status"),
+                indicator="green",
+            )
+            return response
+
+    except DigitaxAPIException as e:
+        frappe.log_error(
+            title="DigiTax Manual Payment Status Update Failed",
+            message=(
+                f"Sales Invoice: {doc.name}\n"
+                f"Payment Status: {payment_status}\n"
+                f"Error: {str(e)}"
+            ),
+        )
+        frappe.throw(
+            _("Failed to resend payment status to DigiTax: {0}").format(str(e)),
+            title=_("DigiTax Error"),
+        )
+    except Exception as e:
+        frappe.log_error(
+            title="DigiTax Manual Payment Status Update Error",
+            message=(
+                f"Sales Invoice: {doc.name}\n"
+                f"Payment Status: {payment_status}\n"
+                f"Error: {str(e)}\n{frappe.get_traceback()}"
+            ),
+        )
+        frappe.throw(
+            _("An unexpected error occurred: {0}").format(str(e)),
+            title=_("Error"),
+        )
+
+
+def _get_digitax_payment_status_for_manual_resend(doc) -> str:
+    if not doc.get("nc_invoice_id"):
+        frappe.throw(_("Invoice must have a DigiTax invoice ID before updating status"))
+
+    if doc.get("nc_signed_at"):
+        frappe.throw(_("Only unsigned DigiTax invoices can update payment status manually"))
+
+    if doc.docstatus == 2:
+        return "REJECTED"
+
+    if doc.docstatus != 1:
+        frappe.throw(_("Only submitted or cancelled invoices can update DigiTax status"))
+
+    doc.reload()
+
+    if doc.outstanding_amount > 0:
+        frappe.throw(_("Only fully paid invoices can be marked as PAID in DigiTax"))
+
+    return "PAID"
+
+
 def sync_cancelled_invoice_payment_status(doc, method: Optional[str] = None) -> None:
     """
     Sync payment status to REJECTED in DigiTax when a Sales Invoice is cancelled.
