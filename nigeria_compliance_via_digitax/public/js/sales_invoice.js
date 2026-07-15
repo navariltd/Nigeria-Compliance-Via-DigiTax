@@ -3,7 +3,7 @@ frappe.ui.form.on("Sales Invoice", {
 		// Show "Get Invoice" for submitted invoices that have a reference number
 		if (frm.doc.docstatus === 1 && frm.doc.nc_invoice_reference_number) {
 			frm.add_custom_button(
-				__("Get Invoice"),
+				__("Sync Invoice Data"),
 				function () {
 					get_invoice_from_digitax(frm);
 				},
