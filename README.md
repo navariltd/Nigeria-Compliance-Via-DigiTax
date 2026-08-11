@@ -68,7 +68,8 @@ To set up the app, you need to configure the following settings in your Frappe s
 
 ### 1. NRS Settings
 
-![alt text](image-1.png)
+<img width="1409" height="650" alt="image" src="https://github.com/user-attachments/assets/6de76bf5-c368-4710-a276-7dd3db702d1d" />
+
 
 In the NRS Settings, you need to enter the following information:
 
@@ -101,7 +102,8 @@ If a customer has a **Tax Identification Number (TIN) and an address**:
 
 1. In the `Tax` tab, link the item to the relevant NRS Tax Category and NRS Product category. After saving the document, a DigiTax ID will be automatically generated.
 
-![Item Tax Tab](image-6.png)
+<img width="1409" height="650" alt="image" src="https://github.com/user-attachments/assets/f485c3eb-52c9-4a08-bf56-eb2c18e6a963" />
+
 
 ### 3. Item Details
 
