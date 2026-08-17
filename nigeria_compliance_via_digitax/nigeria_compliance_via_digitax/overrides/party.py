@@ -18,6 +18,7 @@ CUSTOM_DIGITAX_ID_FIELD = "custom_digitax_id"
 CUSTOM_DIGITAX_IS_ACTIVE_FIELD = "is_active"
 
 
+@frappe.whitelist(methods=["POST"])
 def get_digitax_party_code(doc, method: Optional[str] = None) -> None:
 	"""
 	Synchronize party data with DigiTax API and store the party code.
@@ -27,9 +28,13 @@ def get_digitax_party_code(doc, method: Optional[str] = None) -> None:
 	requirements, and creates/updates the party record in DigiTax.
 
 	Args:
-		doc: The Customer or Supplier document being saved
+		doc: The Customer or Supplier document being saved, or a Customer name
 		method: Hook method name (optional, not used)
 	"""
+	if isinstance(doc, str):
+		doc = frappe.get_doc("Customer", doc)
+		doc.check_permission("write")
+
 	if not _should_sync_party(doc):
 		return
 
