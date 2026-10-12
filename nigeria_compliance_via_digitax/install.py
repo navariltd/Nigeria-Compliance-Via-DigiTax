@@ -16,6 +16,7 @@ def after_install():
 
     load_hs_codes()
     load_service_codes()
+    create_nrs_party_types()
 
     frappe.logger().info(
         "Nigeria Compliance Via Digitax installation setup completed successfully."
@@ -221,3 +222,48 @@ def reload_digitax_category_codes():
     load_service_codes()
 
     frappe.logger().info("Digitax codes reloaded successfully.")
+
+
+def create_nrs_party_types():
+    """
+    Create NRS Party Types if they do not already exist.
+
+    This function checks for the existence of predefined party types in the "NRS Party Type"
+    doctype. If any of the party types are missing, it creates them.
+
+    The predefined party types are:
+        - "Consumer": Represents a consumer entity.
+        - "Business": Represents a business entity or organization.
+        - "Government": Represents a government entity or agency.
+
+    Raises:
+        frappe.ValidationError: If an error occurs while creating a party type.
+    """
+    nrs_party_types = [
+        {
+            "party_type": "Consumer",
+            "invoice_type": "B2C",
+        },
+        {
+            "party_type": "Business",
+            "invoice_type": "B2B",
+        },
+        {
+            "party_type": "Government",
+            "invoice_type": "B2G",
+        }
+    ]
+
+    for party_type in nrs_party_types:
+        if not frappe.db.exists("NRS Party Type", {"party_type": party_type["party_type"]}):
+            try:
+                doc = frappe.get_doc({
+                    "doctype": "NRS Party Type",
+                    "party_type": party_type["party_type"],
+                    "invoice_type": party_type["invoice_type"]
+                })
+                doc.insert(ignore_permissions=True)
+                frappe.logger().info(f"Created NRS Party Type: {party_type['party_type']}")
+            except Exception as e:
+                frappe.logger().error(f"Error creating NRS Party Type {party_type['party_type']}: {str(e)}")
+                frappe.throw(_("An error occurred while creating NRS Party Type {0}: {1}").format(party_type['party_type'], str(e)))

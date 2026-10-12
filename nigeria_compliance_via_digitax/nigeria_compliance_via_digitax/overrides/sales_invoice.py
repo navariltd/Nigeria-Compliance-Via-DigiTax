@@ -79,6 +79,71 @@ def submit_sales_invoice(doc, method: Optional[str] = None) -> None:
         _handle_unexpected_error(doc, e)
 
 
+@frappe.whitelist()
+def resubmit_to_digitax(sales_invoice: str) -> Optional[Dict[str, Any]]:
+    """
+    Resubmit a Sales Invoice to DigiTax when it has no DigiTax invoice ID.
+
+    This is used to handle cases where the original submission failed and
+    nc_invoice_id was never populated. Only allowed when nc_invoice_id is null.
+
+    Args:
+        sales_invoice: Name of the Sales Invoice document
+
+    Returns:
+        DigiTax API response dictionary
+    """
+    if not frappe.db.exists("Sales Invoice", sales_invoice):
+        frappe.throw(_("Sales Invoice {0} not found").format(sales_invoice))
+
+    doc = frappe.get_doc("Sales Invoice", sales_invoice)
+
+    if doc.docstatus != 1:
+        frappe.throw(_("Only submitted invoices can be resubmitted to DigiTax"))
+
+    if doc.get("nc_invoice_id"):
+        frappe.throw(
+            _(
+                "Invoice {0} already has a DigiTax invoice ID ({1}). "
+                "Resubmission is not allowed."
+            ).format(doc.name, doc.nc_invoice_id)
+        )
+
+    try:
+        _validate_invoice_data(doc)
+
+        invoice_payload = _build_invoice_payload(doc)
+        client = DigitaxClient(company=doc.company)
+
+        endpoint = "/credit-notes" if doc.is_return else "/invoices"
+
+        response = client.post(
+            endpoint=endpoint,
+            data=invoice_payload,
+            reference_doctype="Sales Invoice",
+            reference_docname=doc.name,
+        )
+
+        if response:
+            _update_invoice_from_response(doc, response)
+
+            if doc.is_return and doc.get("return_against"):
+                _sync_original_invoice_payment_status_after_credit_note(doc)
+
+            frappe.msgprint(
+                _("Invoice successfully resubmitted to DigiTax"),
+                title=_("DigiTax Resubmission"),
+                indicator="green",
+            )
+
+            return response
+
+    except DigitaxAPIException as e:
+        _handle_digitax_error(doc, e)
+    except Exception as e:
+        _handle_unexpected_error(doc, e)
+
+
 def sync_paid_invoice_payment_status(doc, method: Optional[str] = None) -> None:
     """
     Sync payment status to PAID in DigiTax for invoices that are fully paid on submit.
@@ -140,6 +205,91 @@ def sync_paid_invoice_payment_status(doc, method: Optional[str] = None) -> None:
                 f"Error: {str(e)}\n{frappe.get_traceback()}"
             ),
         )
+
+
+@frappe.whitelist()
+def resend_digitax_payment_status(sales_invoice: str) -> Optional[Dict[str, Any]]:
+    """
+    Manually resend the current Sales Invoice payment status to DigiTax.
+
+    Fully paid submitted invoices are sent as PAID. Cancelled invoices are sent
+    as REJECTED. This is intended for retrying status updates when the invoice
+    is already in DigiTax but has not yet been signed or updated there.
+    """
+    if not frappe.db.exists("Sales Invoice", sales_invoice):
+        frappe.throw(_("Sales Invoice {0} not found").format(sales_invoice))
+
+    doc = frappe.get_doc("Sales Invoice", sales_invoice)
+    payment_status = _get_digitax_payment_status_for_manual_resend(doc)
+
+    try:
+        client = DigitaxClient(company=doc.company)
+        response = client.put(
+            endpoint="/invoices",
+            path_param=f"{doc.nc_invoice_id}/payment-status",
+            data={"payment_status": payment_status},
+            reference_doctype="Sales Invoice",
+            reference_docname=doc.name,
+        )
+
+        if response:
+            _update_invoice_from_response(doc, response)
+            frappe.msgprint(
+                _("Payment status successfully resent to DigiTax as {0}").format(
+                    payment_status
+                ),
+                title=_("DigiTax Payment Status"),
+                indicator="green",
+            )
+            return response
+
+    except DigitaxAPIException as e:
+        frappe.log_error(
+            title="DigiTax Manual Payment Status Update Failed",
+            message=(
+                f"Sales Invoice: {doc.name}\n"
+                f"Payment Status: {payment_status}\n"
+                f"Error: {str(e)}"
+            ),
+        )
+        frappe.throw(
+            _("Failed to resend payment status to DigiTax: {0}").format(str(e)),
+            title=_("DigiTax Error"),
+        )
+    except Exception as e:
+        frappe.log_error(
+            title="DigiTax Manual Payment Status Update Error",
+            message=(
+                f"Sales Invoice: {doc.name}\n"
+                f"Payment Status: {payment_status}\n"
+                f"Error: {str(e)}\n{frappe.get_traceback()}"
+            ),
+        )
+        frappe.throw(
+            _("An unexpected error occurred: {0}").format(str(e)),
+            title=_("Error"),
+        )
+
+
+def _get_digitax_payment_status_for_manual_resend(doc) -> str:
+    if not doc.get("nc_invoice_id"):
+        frappe.throw(_("Invoice must have a DigiTax invoice ID before updating status"))
+
+    if doc.get("nc_signed_at"):
+        frappe.throw(_("Only unsigned DigiTax invoices can update payment status manually"))
+
+    if doc.docstatus == 2:
+        return "REJECTED"
+
+    if doc.docstatus != 1:
+        frappe.throw(_("Only submitted or cancelled invoices can update DigiTax status"))
+
+    doc.reload()
+
+    if doc.outstanding_amount > 0:
+        frappe.throw(_("Only fully paid invoices can be marked as PAID in DigiTax"))
+
+    return "PAID"
 
 
 def sync_cancelled_invoice_payment_status(doc, method: Optional[str] = None) -> None:
@@ -210,6 +360,7 @@ def _update_invoice_from_response(doc, response: Dict[str, Any]) -> None:
         "validated_at": "nc_validated_at",
         "payment_status": "nc_payment_status",
         "invoice_reference_number": "nc_invoice_reference_number",
+        "invoice_kind": "nc_invoice_kind",
     }
 
     datetime_fields = ["signed_at", "validated_at"]
@@ -277,14 +428,24 @@ def _build_invoice_payload(doc) -> Dict[str, Any]:
     Returns:
         Dictionary containing invoice data for DigiTax API
     """
+
     payload = {
         "invoice_date": doc.posting_date,
         "issue_date": nowdate(),
         "invoice_type_code": _get_invoice_type_code(doc.get("nrs_invoice_type")),
         "document_currency_code": doc.currency,
         "trader_invoice_number": doc.name,
+        "invoice_kind": doc.get("nc_invoice_kind"),
         "items": _map_invoice_items(doc.items),
     }
+
+    if doc.get("nc_invoice_kind") == "B2B":
+        party_id = _get_customer_party_id(doc.customer)
+        if not party_id:
+            frappe.throw(
+                _("Customer {0} must be synced with DigiTax").format(doc.customer)
+            )
+        payload["party_id"] = party_id
 
     # For credit notes
     if doc.is_return and doc.get("return_against"):
@@ -614,3 +775,21 @@ def _sync_original_invoice_payment_status_after_credit_note(credit_note_doc) -> 
                 f"Error: {str(e)}\n{frappe.get_traceback()}"
             ),
         )
+
+
+def _get_customer_party_id(customer: str) -> Optional[str]:
+    """
+    Fetch the DigiTax party ID for a given customer.
+
+    Args:
+        customer: Name of the Customer
+    Returns:
+        DigiTax party ID if found, otherwise None
+    """
+    if not customer:
+        return None
+
+    party_id = frappe.db.get_value(
+        "Customer", {"name": customer}, "custom_digitax_id"
+    )
+    return party_id
